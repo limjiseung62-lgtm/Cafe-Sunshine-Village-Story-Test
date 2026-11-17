@@ -1,0 +1,2 @@
+import{installStorage}from'./storage-init.mjs';import{recoverJournal}from'./transactions.mjs';
+if(parent===window){location.replace(new URL('./',import.meta.url));}else try{installStorage();recoverJournal(localStorage);await import('./game/v30CommonEntry.js');await import('./src/rc2-bridge.mjs');await import('./native-backup-bridge.mjs')}catch(e){const p=document.createElement('p');p.textContent='테스트 카페를 안전하게 열지 못했어요. 기존 저장은 유지돼요. '+e.message;document.body.append(p)}

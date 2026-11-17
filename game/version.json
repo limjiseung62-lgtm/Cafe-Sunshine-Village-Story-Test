@@ -1,0 +1,61 @@
+{
+  "version": "3.2.0-growth-only-rc.1",
+  "status": "local-only",
+  "officialUnchanged": true,
+  "storagePrefix": "cafe-v30-mega-common-rc1/",
+  "subjects": {
+    "math": 49233,
+    "science": 104,
+    "korean-literacy": 200,
+    "social-studies": 200
+  },
+  "maxGrowthLevel": 30,
+  "maxFloor": [
+    64,
+    48
+  ],
+  "releaseNotes": "V31-FINAL-NOTES.html",
+  "sourceCandidate": "636a93f6f2156c7103484e5581733ede6f5679a9",
+  "testUrl": "https://limjiseung62-lgtm.github.io/Cafe-Learning-Tycoon-v30-Mega-RC1/",
+  "cacheToken": "v31-final-636a93f6f215",
+  "build": "phase32-growth-only-local",
+  "baselinePublicBuild": "interior-placement-unblock-1",
+  "approvedContentSubjects": [
+    "math",
+    "science",
+    "korean-literacy",
+    "social-studies"
+  ],
+  "approvedKoreanQuestions": 200,
+  "approvedSocialQuestions": 200,
+  "sourceQuestionsModified": false,
+  "baselineSourceUnchanged": true,
+  "backupPatch": "file-restore-p0-1",
+  "seatPatch": "level-operating-seats-1",
+  "integratedGuests": 100,
+  "integratedStaff": 50,
+  "maxOperatingSeats": 100,
+  "maxWorkingStaff": 25,
+  "performanceStatus": "INDEPENDENT_BROWSER_APPROX_1HZ_LONGRUN_NOT_VALIDATED",
+  "integrationDate": "2026-11-14",
+  "batchServing": false,
+  "sourceFunctionalCheckpoint": "636a93f6f2156c7103484e5581733ede6f5679a9",
+  "preparedAt": "2026-11-12T03:45:58.460Z",
+  "deployed": false,
+  "renewalEconomyStatus": "USER_APPROVED_SYNTHETIC_10_25H_7_25H_NO_TIME_TARGET",
+  "officialRepositoryModified": false,
+  "releasePreparedAt": "2026-11-13T16:47:11.321Z",
+  "releaseVerificationRecord": "636a93f",
+  "furnitureCount": 120,
+  "startingMenus": 3,
+  "maxMenuEnhancement": 15,
+  "menuUpgradeCostsRestored": true,
+  "decoratingPause": true,
+  "specializationStages": 4,
+  "tutorialCount": 12,
+  "modes": [
+    "CAFE_GROWTH"
+  ],
+  "classRemoved": true,
+  "publicBaseline": "39b0fb6"
+}
