@@ -1,7 +1,7 @@
 {
   "version": {
     "version": "sunshine-part1-test.1",
-    "build": "20261118-1",
+    "build": "20261118-2",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -359,7 +359,7 @@
     {
       "file": "bootstrap.mjs",
       "bytes": 8568,
-      "sha256": "cb81ce6808f7a2663865cf4cd7968a584355ebefbd20122f5b19d6892ef19c61"
+      "sha256": "1a589a7b6b2287c98ceb88e3e0132079eab924442e4fbb1acab9f47b5e93d3f8"
     },
     {
       "file": "game/.gitattributes",
@@ -4014,7 +4014,7 @@
     {
       "file": "index.html",
       "bytes": 4962,
-      "sha256": "91d0539eae5cb8fad74d72086971c2127462bfa96f3288dc047f427f889bbcbf"
+      "sha256": "afc9c3061c2c7ded13096af160501132532bb0c97e39ad68c7e58730726f3efc"
     },
     {
       "file": "native-backup-bridge.mjs",
@@ -4103,8 +4103,8 @@
     },
     {
       "file": "storage-init.mjs",
-      "bytes": 2105,
-      "sha256": "b92b74c8db04c5615e992d05e53c8e138a5189e41fec6f693a2baac5514043ec"
+      "bytes": 2802,
+      "sha256": "81b324dce6079edc69d495d4ff0d224ecbbb72dd214ce580f58a49b6d1d83197"
     },
     {
       "file": "story.css",
@@ -4119,7 +4119,7 @@
     {
       "file": "version.json",
       "bytes": 326,
-      "sha256": "c44bd3d23a2c389f34f6338c62b7636a8a4f6df5b7fae4cf5d2daced363bea8b"
+      "sha256": "5fc8fc4b269d53e98de6696aecf1bd34c57329ab907f83307f872258d7e08fd5"
     }
   ],
   "nativeChanged": [
