@@ -1,7 +1,7 @@
 {
   "version": {
     "version": "sunshine-part1-test.1",
-    "build": "20261118-2",
+    "build": "20261118-3",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -15,6 +15,11 @@
       "file": ".nojekyll",
       "bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "app-owner.mjs",
+      "bytes": 596,
+      "sha256": "cac4fdbbc5183e3c7f9c0a808a18a94c339efa31041df9e188832c11e932c675"
     },
     {
       "file": "assets/story/bakery-exterior-g2.png",
@@ -358,8 +363,8 @@
     },
     {
       "file": "bootstrap.mjs",
-      "bytes": 8568,
-      "sha256": "1a589a7b6b2287c98ceb88e3e0132079eab924442e4fbb1acab9f47b5e93d3f8"
+      "bytes": 8774,
+      "sha256": "cd3f78e7569bb4ef3b8a82a517fa9e1c6bd33a395697b6763fb94701f0f2f23d"
     },
     {
       "file": "game/.gitattributes",
@@ -4014,7 +4019,7 @@
     {
       "file": "index.html",
       "bytes": 4962,
-      "sha256": "afc9c3061c2c7ded13096af160501132532bb0c97e39ad68c7e58730726f3efc"
+      "sha256": "b497898a20df24e15e864f9a08d7b23a4d82cced188070f01e073e238dbe2cff"
     },
     {
       "file": "native-backup-bridge.mjs",
@@ -4119,7 +4124,7 @@
     {
       "file": "version.json",
       "bytes": 326,
-      "sha256": "5fc8fc4b269d53e98de6696aecf1bd34c57329ab907f83307f872258d7e08fd5"
+      "sha256": "bfd43eedd9a0b32f3b3e628b9664cfbd282cfb505707d9894d4f0588796d2a54"
     }
   ],
   "nativeChanged": [
@@ -4127,6 +4132,6 @@
     "index.html"
   ],
   "protectedFiles": 136,
-  "syntaxModules": 353,
+  "syntaxModules": 354,
   "studentDataIncluded": false
 }
