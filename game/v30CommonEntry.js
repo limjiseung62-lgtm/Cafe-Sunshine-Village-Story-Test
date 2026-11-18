@@ -18,7 +18,7 @@ try {
     await attachExternal(instance);
     configureQuestionCatalog(instance);
     installCommonArchiveMenu();
-    await import('./main.js?storageBuild=20261118-4');
+    await import('./main.js?storageBuild=20261118-5');
 }
 catch (error) {
     const box = document.createElement('section');

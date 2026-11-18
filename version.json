@@ -1,11 +1,13 @@
 {
-  "version": "sunshine-part1-test.2",
-  "build": "20261118-4",
+  "version": "sunshine-part1-test.3",
+  "build": "20261118-5",
   "cafeVersion": "3.2.0-growth-only-rc.1",
   "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
   "storyCommit": "aaec997",
   "storyReview": "18bb108",
   "storageNamespace": "sunshine-independent-test-v1/",
   "testOnly": true,
-  "economyChanged": false
+  "economyChanged": false,
+  "storageBackend": "IndexedDB",
+  "storageDatabaseVersion": 1
 }

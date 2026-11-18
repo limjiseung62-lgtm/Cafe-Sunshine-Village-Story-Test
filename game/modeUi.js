@@ -1,4 +1,4 @@
-import{storageFailure}from'../storage-errors.mjs';
+import{storageFailure}from'../storage-errors.mjs?v=20261118-5';
 import { externalStudyChangeRequested, loadHistoricalStudy } from './externalLaunch.js';
 import { prepareGrowthStudySwitch } from './growthStudySwitch.js';
 import { mountRecoveryStart, mountBackupControls, mountPlayingBackup, mountEndBackup } from './backupRecoveryUi.js';
@@ -30,7 +30,7 @@ import { chooseLongMission, prepareLongState } from './longGrowthUi.js';
 import { growthRuntime } from './growthRuntime.js';
 import { createGrowthSave } from './growthSave.js';
 import { GrowthSessionController } from './growthSession.js';
-import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261118-4';
+import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261118-5';
 import { policyFor } from './sessionModes.js';
 import { questionCatalog } from './questionPack.js';
 import { escapeText } from './questionRenderer.js';
@@ -356,11 +356,9 @@ export class ModeFlow {
     confirm(message, action) { if (document.getElementById('mode-confirm'))
         return; const dialog = document.createElement('section'); dialog.id = 'mode-confirm'; dialog.className = 'mode-confirm'; dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true'); dialog.setAttribute('aria-label', '카페 확인'); dialog.innerHTML = '<div><h2>한 번 더 확인해요</h2><p>' + message + '</p><button id="confirm-cancel" class="secondary">취소</button><button id="confirm-yes" class="primary">확인하고 진행</button></div>'; document.body.append(dialog); e('confirm-cancel').onclick = () => dialog.remove(); e('confirm-yes').onclick = () => { if (!dialog.isConnected)
         return; dialog.remove(); action(); }; e('confirm-cancel').focus(); }
-    attach(game, pool) { if (game.mode !== 'CAFE_GROWTH')
-        throw Error('내 카페 모드만 지원해요.'); this.pool = pool; this.endedGame = null; this.controller = new GrowthSessionController(game, this.repository, undefined, (save, base) => growthRuntime.enrich(save, base)); mountLiveManagement(game, this.controller); mountPlayingBackup(this.repository, () => commonTransactionOpen ? { ok: false, message: '학습 응답 저장을 마친 뒤 백업해 주세요.' } : this.controller.save()); let initial;try{initial=this.controller.save()}catch(error){initial=storageFailure(error)}if(!initial.ok){this.controller=null;throw Error(initial.message)}this.feedback(initial); e('mode-label').textContent = '내 카페 키우기'; e('end-business').hidden = false; e('end-business').textContent = '영업 마치기'; e('end-business').onclick = () => this.confirm('지금 영업을 마치고 카페를 저장할까요?', () => { game.endBusiness(); this.endView(); this.refresh(game); }); e('leave-game').textContent = '저장하고 나가기'; e('leave-game').onclick = () => this.confirm('현재 카페를 저장하고 나갈까요?', () => { if (game.status !== 'RUNNING')
-        return; this.flush(); if (this.controller.lastResult.ok)
-        location.reload(); }); }
-    feedback(result) { e('save-status').textContent = result.ok ? '저장 완료 ✓' : result.message || '카페 저장에 문제가 생겼어요.'; e('save-status').className = result.ok ? 'save-ok' : 'save-error'; this.savedUntil = result.ok ? performance.now() + 2200 : Infinity; if (result.ok) {
+    async attach(game, pool) { if (game.mode !== 'CAFE_GROWTH')
+        throw Error('내 카페 모드만 지원해요.'); this.pool = pool; this.endedGame = null; this.controller = new GrowthSessionController(game, this.repository, undefined, (save, base) => growthRuntime.enrich(save, base)); mountLiveManagement(game, this.controller); mountPlayingBackup(this.repository, () => commonTransactionOpen ? { ok: false, message: '학습 응답 저장을 마친 뒤 백업해 주세요.' } : this.controller.save()); let initial;try{initial=this.controller.save()}catch(error){initial=storageFailure(error)}if(!initial.ok){this.controller=null;throw Error(initial.message)}await globalThis.__SUNSHINE_STORAGE_FLUSH?.();this.feedback(initial); e('mode-label').textContent = '내 카페 키우기'; e('end-business').hidden = false; e('end-business').textContent = '영업 마치기'; e('end-business').onclick = () => this.confirm('지금 영업을 마치고 카페를 저장할까요?', () => { game.endBusiness(); this.endView(); this.refresh(game); }); e('leave-game').textContent = '저장하고 나가기'; e('leave-game').onclick = () => this.confirm('현재 카페를 저장하고 나갈까요?', async () => { if (game.status !== 'RUNNING')return;this.flush();if(this.controller.lastResult.ok){try{await globalThis.__SUNSHINE_STORAGE_FLUSH?.();location.reload()}catch(error){this.feedback(storageFailure(error))}} }); }
+    feedback(result) { if(result.ok&&globalThis.__SUNSHINE_STORAGE_BLOCKED){e('save-status').textContent='저장 확인 중…';e('save-status').dataset.idbPending='true';this.savedUntil=Infinity;return;} e('save-status').textContent = result.ok ? '저장 완료 ✓' : result.message || '카페 저장에 문제가 생겼어요.'; e('save-status').className = result.ok ? 'save-ok' : 'save-error'; this.savedUntil = result.ok ? performance.now() + 2200 : Infinity; if (result.ok) {
         document.getElementById('save-blocker')?.remove();
     }
     else if (!document.getElementById('save-blocker')) {

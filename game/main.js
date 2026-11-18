@@ -52,7 +52,7 @@ import { installAssetFallbacks } from './assetFallback.js';
 import { createLearning } from './learningIntegration.js';
 import { renderQuestionText, escapeText, renderDiagram } from './questionRenderer.js';
 import { GameFeel } from './gameFeel.js';
-import { ModeFlow } from './modeUi.js?storageBuild=20261118-4';
+import { ModeFlow } from './modeUi.js?storageBuild=20261118-5';
 import { itemCatalog, specialNames, specialIcons } from './phase4Config.js';
 import { showOrderBubble, syncOrderBubble, assetSignature } from './presentation.js';
 import { personalityLabels } from './customerRules.js';
@@ -157,7 +157,7 @@ export async function startSession(session, pool, questionRandom, learningOption
         throw error;
     }
 } commonBusy = false; readVisits.clear(); growthState.readVisits.forEach(n => readVisits.add(n)); const sessionAnalytics = analytics; analytics.packName = pool?.[0]?.unit ?? '기본 학습'; void questionCatalog.list().then(list => { if (analytics === sessionAnalytics)
-    analytics.packName = list.find(p => p.packId === engine.provider.packId)?.selectionLabel ?? list.find(p => p.packId === engine.provider.packId)?.title ?? analytics.packName; }).catch(() => { }); game.enableHospitality(specialQuestions(engine.provider.list()).map(q => q.questionId)); specialAttempt = growthState.specialAttempt ?? null; active = null; feedback = null; panelOpen = false; investmentOpen = false; investmentMessage = ''; renderedInvestmentKey = ''; celebrationUntil = 0; productionUntil = 0; beginLongGrowth(session, growthRuntime.savedFor(session) ?? createGrowthSave(), growthRuntime.businessId(), () => modeFlow.flush()); try{modeFlow.attach(session,pool)}catch(error){game=null;commonFlow=null;commonBusy=false;app.classList.remove('in-session');throw error} beginMiniUi(session, () => modeFlow.flush()); beginManagementUi(session, () => modeFlow.flush()); beginSpecializationUi(session, () => modeFlow.flush(), () => growthRuntime.businessId()); beginBranchUi(session, growthRuntime.savedFor(session) ?? createGrowthSave(), () => modeFlow.flush()); el('setup').hidden = true; releaseResultView(el('results')); el('results').hidden = true; el('problem-panel').hidden = true; el('playing').hidden = false; el('make').disabled = false; el('investment-panel').hidden = true; last = performance.now(); render(); await finalizeExternal(commonFlow, session, () => modeFlow.flush()); beginRenewalTutorials(session, () => modeFlow.flush(), commonFlow ? () => new CommonCafeFlow(commonFlow.loaded, structuredClone(commonFlow.choices)) : undefined); }
+    analytics.packName = list.find(p => p.packId === engine.provider.packId)?.selectionLabel ?? list.find(p => p.packId === engine.provider.packId)?.title ?? analytics.packName; }).catch(() => { }); game.enableHospitality(specialQuestions(engine.provider.list()).map(q => q.questionId)); specialAttempt = growthState.specialAttempt ?? null; active = null; feedback = null; panelOpen = false; investmentOpen = false; investmentMessage = ''; renderedInvestmentKey = ''; celebrationUntil = 0; productionUntil = 0; beginLongGrowth(session, growthRuntime.savedFor(session) ?? createGrowthSave(), growthRuntime.businessId(), () => modeFlow.flush()); try{await modeFlow.attach(session,pool)}catch(error){game=null;commonFlow=null;commonBusy=false;app.classList.remove('in-session');throw error} beginMiniUi(session, () => modeFlow.flush()); beginManagementUi(session, () => modeFlow.flush()); beginSpecializationUi(session, () => modeFlow.flush(), () => growthRuntime.businessId()); beginBranchUi(session, growthRuntime.savedFor(session) ?? createGrowthSave(), () => modeFlow.flush()); el('setup').hidden = true; releaseResultView(el('results')); el('results').hidden = true; el('problem-panel').hidden = true; el('playing').hidden = false; el('make').disabled = false; el('investment-panel').hidden = true; last = performance.now(); render(); await finalizeExternal(commonFlow, session, () => modeFlow.flush()); beginRenewalTutorials(session, () => modeFlow.flush(), commonFlow ? () => new CommonCafeFlow(commonFlow.loaded, structuredClone(commonFlow.choices)) : undefined); }
 document.querySelectorAll('[data-focus-tab]').forEach(b => b.onclick = () => { if (game?.status !== 'RUNNING')
     return; investmentTab = b.dataset.focusTab; selectedGuest = null; detailKey = ''; el('guest-detail').hidden = true; investmentOpen = true; panelOpen = false; renderProblem(); renderInvestment(true); });
 el('invest').addEventListener('click', () => { investmentTab = 'cafe'; if (game?.status !== 'RUNNING')
@@ -380,7 +380,7 @@ export function render() {
     ux.poll(game);
 }
 let nextRender = 0, nextActors = 0;
-function frame(now) { if (game && !commonBusy && !liveManagementOpen)
+function frame(now) {if(globalThis.__SUNSHINE_STORAGE_BLOCKED){requestAnimationFrame(frame);return;} if (game && !commonBusy && !liveManagementOpen)
     pollRenewalTutorials(game); if (game?.tutorialPause?.active) {
     requestAnimationFrame(frame);
     return;
@@ -883,7 +883,7 @@ async function submitCommon(answer) { if (!commonFlow || commonBusy || game?.sta
 catch (error) {
     commonSaveBlocked(error instanceof Error ? error.message : '응답 저장을 확인해 주세요.', false);
 } }
-function advanceTime() { if (game?.tutorialPause?.active)
+function advanceTime() {if(globalThis.__SUNSHINE_STORAGE_BLOCKED)return; if (game?.tutorialPause?.active)
     return; if (commonBusy || liveManagementOpen)
     return; if (game?.status !== 'RUNNING')
     return; game.tick(growthRuntime.delta(game) ?? (classroomElapsed ? Math.max(0, classroomElapsed() - game.elapsedTime) : clock.take())); if (game.status === 'CLOSED')
