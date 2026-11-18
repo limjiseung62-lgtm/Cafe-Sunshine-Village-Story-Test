@@ -1,7 +1,7 @@
 import{availableUiFeatures}from'./featureVisibility.js';
 import { mountRewardWallet } from './renewalRewardUi.js';
 import { newTutorialPause, beginTutorialPause, endTutorialPause } from './tutorialPause.js';
-import { newRenewalTutorials, pendingTutorials, tutorialLevels, tutorialTitles } from './renewalTutorialState.js?v=20261118-7';
+import { newRenewalTutorials, pendingTutorials, tutorialLevels, tutorialTitles } from './renewalTutorialState.js?v=20261118-8';
 import { tutorialGuideSteps } from './tutorialGuideSteps.js';
 import{unlocked}from'./progressiveFeatures.js';
 import { activeMini } from './miniGames.js';
