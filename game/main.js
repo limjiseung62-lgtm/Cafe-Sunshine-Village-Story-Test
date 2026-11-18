@@ -1,6 +1,6 @@
 import{pollFeatureNotices}from'./featureVisibility.js';
 import { recoverInteriorEditing } from './interiorPause.js';
-import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261118-8';
+import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261118-9';
 import { finalizeExternal, observeExternalGame } from './externalLaunch.js';
 import { releaseResultView } from './resultViewMemory.js';
 import { kitchenRequiredSpace, kitchenStages, kitchenFloorLabel } from './productionKitchen.js';
@@ -53,7 +53,7 @@ import { installAssetFallbacks } from './assetFallback.js';
 import { createLearning } from './learningIntegration.js';
 import { renderQuestionText, escapeText, renderDiagram } from './questionRenderer.js';
 import { GameFeel } from './gameFeel.js';
-import { ModeFlow } from './modeUi.js?storageBuild=20261118-8';
+import { ModeFlow } from './modeUi.js?storageBuild=20261118-9';
 import { itemCatalog, specialNames, specialIcons } from './phase4Config.js';
 import { showOrderBubble, syncOrderBubble, assetSignature } from './presentation.js';
 import { personalityLabels } from './customerRules.js';
@@ -334,6 +334,7 @@ export function render() {
     serve.disabled = !game.readyToServe.length || game.service.workers[0].state !== 'IDLE';
     serve.textContent = '서빙하기 (' + game.readyToServe.length + ')';
     serve.setAttribute('aria-label', '서빙하기 · 준비 주문 ' + game.readyToServe.length + '개');
+    document.querySelector('[data-focus-tab=staff]').hidden=!unlocked(game,'recruitment');
     el('service-status').textContent = game.service.paid.length ? '자동 서빙 · 사장님 + 직원 ' + game.service.paid.length + '명' : game.service.workers[0].state === 'IDLE' ? '준비된 주문을 눌러 서빙해요' : '사장님이 음식을 운반하고 돌아와요';
     el('live-stats').textContent = '응대한 손님 ' + game.stats.servedCustomers + '명 · 푼 문제 ' + game.stats.attempted + '개 · 총매출 ' + game.stats.revenue.toLocaleString() + '원';
     renderEventPanel(game, panelOpen);

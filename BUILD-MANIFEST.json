@@ -1,7 +1,7 @@
 {
   "version": {
-    "version": "sunshine-part1-test.6",
-    "build": "20261118-8",
+    "version": "sunshine-part1-test.7",
+    "build": "20261118-9",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -373,7 +373,7 @@
     {
       "file": "bootstrap.mjs",
       "bytes": 11139,
-      "sha256": "d805976232022503d186df10c42a1353c63ef1cf3a532feda854a5c160fa6f98"
+      "sha256": "4ddf928b83db091a10519e905524fe2c93401d6103e13ddfc0d6cbcf77740760"
     },
     {
       "file": "game/.gitattributes",
@@ -3017,8 +3017,8 @@
     },
     {
       "file": "game/index.html",
-      "bytes": 3330,
-      "sha256": "b9940cf4f8e133944f54e69618d4cce8daf6f4b12d95ea02cdce054352625381"
+      "bytes": 3388,
+      "sha256": "2812dfd7787bc50b7704cc990e3f65773f6281e6ce336685551a49479097743e"
     },
     {
       "file": "game/integrated.css",
@@ -3147,8 +3147,8 @@
     },
     {
       "file": "game/main.js",
-      "bytes": 86062,
-      "sha256": "bf74b5df116c7ea0256d3ab5d388d08f8730c070621b49ae21a815f6dbdd35e6"
+      "bytes": 86154,
+      "sha256": "5c4acb68c20c229daf2ca503a39b1779e14f4a83c6d2b40be95ecb7a6cf43ede"
     },
     {
       "file": "game/managementAlbum.js",
@@ -3416,6 +3416,16 @@
       "sha256": "51b81c3b4f694f6e54b5ce47aa736c342de5f547973f85582ec10c4a10a2e977"
     },
     {
+      "file": "game/mobilePlay.css",
+      "bytes": 7073,
+      "sha256": "31eae508eba7fb8ed9542f661975efe91e6cfae910314b41d66689ab25257817"
+    },
+    {
+      "file": "game/mobilePlay.mjs",
+      "bytes": 3097,
+      "sha256": "a5cc96e9b30aa9b74625c687fcc2f4cbe89900a48f7554dd4f91cb4ecf61a208"
+    },
+    {
       "file": "game/modeBalance.js",
       "bytes": 1650,
       "sha256": "7ae75f29fa965550eec9a25884072af79018625090854d1553433fa33de1083a"
@@ -3433,7 +3443,7 @@
     {
       "file": "game/modeUi.js",
       "bytes": 39734,
-      "sha256": "7e3c487bae16962fb2ebfacafbbb3473bcc0813f16d0652daba30c5fdb65c902"
+      "sha256": "75d522940b0f3f22d6e906adb33a6d14577d476dc8bacacb0b33795f6c31b37b"
     },
     {
       "file": "game/motionExpansionCatalog.js",
@@ -3663,7 +3673,7 @@
     {
       "file": "game/renewalTutorialUi.js",
       "bytes": 6408,
-      "sha256": "7b075f30fc4e6651ca6dc5287e34c0cbb9dd5970aeca9b82f547a1d19823606f"
+      "sha256": "6087c1f04afb0a2f58dd1cad18903ca1287846c05b021f5bc4f405e0bbb007c7"
     },
     {
       "file": "game/resultViewMemory.js",
@@ -3673,7 +3683,7 @@
     {
       "file": "game/saveRepository.js",
       "bytes": 11287,
-      "sha256": "471627e9b036732ee8b8e3bfbb69c3f3f3c210ba2c41c0b67e2ed03e300ae9a2"
+      "sha256": "13a0e18f2a0a7547f6204bd0412541be68d1629c475c106d9497e41e9966175a"
     },
     {
       "file": "game/scienceOperational.js",
@@ -3933,7 +3943,7 @@
     {
       "file": "game/v30CommonEntry.js",
       "bytes": 2606,
-      "sha256": "9bea8a4ca77cdd772abdee70b8af653082cb57a31b0b1834077403a8f3fe4b11"
+      "sha256": "e4603997f94c880d1608ae287a9155ee00f8769991b4499b5608284ca88a3126"
     },
     {
       "file": "game/version.json",
@@ -4032,13 +4042,13 @@
     },
     {
       "file": "game-bootstrap.mjs",
-      "bytes": 838,
-      "sha256": "ca11d5b4d088c2b32d59bcba06f4e89dc86ba1e18c20913f17208c690d75b84b"
+      "bytes": 889,
+      "sha256": "120d34e976bc2f7e0f0ce100e3860082a4be7004bd25c0fa0afe326bd8087bd1"
     },
     {
       "file": "index.html",
-      "bytes": 4975,
-      "sha256": "873c768baae0cbd7157aed0dd7c17b47bb1cd28d0b0851e5b327133a870588b3"
+      "bytes": 4987,
+      "sha256": "e87e9e8e018313e51ef1d0acba503466663f611849e499dc33266d128b5a1130"
     },
     {
       "file": "MOBILE_STORAGE_ARCHITECTURE.md",
@@ -4053,7 +4063,7 @@
     {
       "file": "README.md",
       "bytes": 1236,
-      "sha256": "e4c4129a2850bf3120171d8876e999ffbbaba05a085bf5dfcab7817fc40dd0b3"
+      "sha256": "64ef222e783e442947157b2fbb2cb7d479ef7d1b1292268de0b1633fde1f42d7"
     },
     {
       "file": "src/ending-stage.mjs",
@@ -4132,13 +4142,13 @@
     },
     {
       "file": "src/story-ui.mjs",
-      "bytes": 31879,
-      "sha256": "a1a9b169383a5945db8aec8586df851fc9c4a8f84d11f638e6395f704860f1e2"
+      "bytes": 31980,
+      "sha256": "b1735bacd91ed491b4e0a4a0b4830825d3e64cd8134481f8e84065fef277622c"
     },
     {
       "file": "start-over.mjs",
       "bytes": 5301,
-      "sha256": "5470966bc25d1e05322b0306186c028d07f68588c20b8b5fa51026f09c1fbd73"
+      "sha256": "d3076b3b50b8dcce8583fe54f565d22440b7160968c4e3fd01888e6998bae860"
     },
     {
       "file": "storage-codec.mjs",
@@ -4148,7 +4158,7 @@
     {
       "file": "storage-engine.mjs",
       "bytes": 9685,
-      "sha256": "97719ef2d2a022127d99f2d8b3ce23fac013dc99628b656a6e3390d7aa46b2e5"
+      "sha256": "169bf615601c991857f0160a0be8f7eed28b7e2a9cf2ecabf36019072abc8d63"
     },
     {
       "file": "storage-errors.mjs",
@@ -4158,7 +4168,7 @@
     {
       "file": "storage-init.mjs",
       "bytes": 7013,
-      "sha256": "20c504383352e77fdb338f1849928b6cbfd6917e2db7493cc37169f793b18aa1"
+      "sha256": "b2923efc70ec5041d799c274a1b672392a0baaa9c2de8fba0d64d847000afae8"
     },
     {
       "file": "STORAGE-LICENSES.md",
@@ -4167,8 +4177,8 @@
     },
     {
       "file": "story.css",
-      "bytes": 34997,
-      "sha256": "1b5c9ef0336ae77b35f4038af518ef028ce57de7e1b1271f8a28302b30da1a9c"
+      "bytes": 35715,
+      "sha256": "82f324b04c0dbdc4d7872c6561a09b733416a00da9dc5a751ef2d3d36d6746e4"
     },
     {
       "file": "transactions.mjs",
@@ -4193,7 +4203,7 @@
     {
       "file": "version.json",
       "bytes": 402,
-      "sha256": "61a2aee38c90af19c01d72a478e3ecd91b1f80556bf9cd5d5a676f683c689b5f"
+      "sha256": "d5540f709c76adb95b8ac6dfd2d1a06c5f849d3ee72face106f84afd3e1249ec"
     }
   ],
   "changed": [
@@ -4205,6 +4215,8 @@
     "game/main.js",
     "game/managementHub.js",
     "game/megaExpansionUi.js",
+    "game/mobilePlay.css",
+    "game/mobilePlay.mjs",
     "game/modeUi.js",
     "game/recruitUi.js",
     "game/renewalAppearance.js",
@@ -4227,10 +4239,11 @@
     "storage-engine.mjs",
     "storage-errors.mjs",
     "storage-init.mjs",
+    "story.css",
     "transactions.mjs",
     "version.json"
   ],
   "protectedFiles": 136,
-  "syntaxModules": 361,
+  "syntaxModules": 362,
   "studentDataIncluded": false
 }

@@ -1,6 +1,6 @@
 import{encodeStored,decodeStored}from'./storage-codec.mjs';
-import{createDurableHub,bindCafeWrite,recoverPreviousDatabase,MAIN}from'./storage-engine.mjs?v=20261118-8';
-import{storageFailure}from'./storage-errors.mjs?v=20261118-8';
+import{createDurableHub,bindCafeWrite,recoverPreviousDatabase,MAIN}from'./storage-engine.mjs?v=20261118-9';
+import{storageFailure}from'./storage-errors.mjs?v=20261118-9';
 export const NAMESPACE='sunshine-independent-test-v1/';let prepared=false,nativeOpen,rawStorage,rawSession,native;const facades=new WeakMap();
 export function prepareStorageIsolation(){if(prepared)return;prepared=true;const p=Storage.prototype;native={get:p.getItem,set:p.setItem,remove:p.removeItem,key:p.key,length:Object.getOwnPropertyDescriptor(p,'length').get};try{rawStorage=globalThis.localStorage}catch(e){rawStorage={error:e}}try{rawSession=globalThis.sessionStorage}catch{}
  nativeOpen=indexedDB.open.bind(indexedDB);const del=indexedDB.deleteDatabase.bind(indexedDB);indexedDB.open=(n,v)=>nativeOpen(NAMESPACE+n,v);indexedDB.deleteDatabase=n=>del(NAMESPACE+n);
