@@ -1,6 +1,6 @@
 import{pollFeatureNotices}from'./featureVisibility.js';
 import { recoverInteriorEditing } from './interiorPause.js';
-import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261119-1';
+import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261119-2';
 import { finalizeExternal, observeExternalGame } from './externalLaunch.js';
 import { releaseResultView } from './resultViewMemory.js';
 import { kitchenRequiredSpace, kitchenStages, kitchenFloorLabel } from './productionKitchen.js';
@@ -53,7 +53,7 @@ import { installAssetFallbacks } from './assetFallback.js';
 import { createLearning } from './learningIntegration.js';
 import { renderQuestionText, escapeText, renderDiagram } from './questionRenderer.js';
 import { GameFeel } from './gameFeel.js';
-import { ModeFlow } from './modeUi.js?storageBuild=20261119-1';
+import { ModeFlow } from './modeUi.js?storageBuild=20261119-2';
 import { itemCatalog, specialNames, specialIcons } from './phase4Config.js';
 import { showOrderBubble, syncOrderBubble, assetSignature } from './presentation.js';
 import { personalityLabels } from './customerRules.js';

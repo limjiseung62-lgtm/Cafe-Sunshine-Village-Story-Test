@@ -1,4 +1,4 @@
-import{storageFailure}from'../storage-errors.mjs?v=20261119-1';
+import{storageFailure}from'../storage-errors.mjs?v=20261119-2';
 import { externalStudyChangeRequested, loadHistoricalStudy } from './externalLaunch.js';
 import { prepareGrowthStudySwitch } from './growthStudySwitch.js';
 import { mountRecoveryStart, mountBackupControls, mountPlayingBackup, mountEndBackup } from './backupRecoveryUi.js';
@@ -30,7 +30,7 @@ import { chooseLongMission, prepareLongState } from './longGrowthUi.js';
 import { growthRuntime } from './growthRuntime.js';
 import { createGrowthSave } from './growthSave.js';
 import { GrowthSessionController } from './growthSession.js';
-import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261119-1';
+import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261119-2';
 import { policyFor } from './sessionModes.js';
 import { questionCatalog } from './questionPack.js';
 import { escapeText } from './questionRenderer.js';
@@ -406,7 +406,7 @@ export class ModeFlow {
         box.className = 'growth-grant';
         box.innerHTML = '<h3>이번 영업 성장 지원</h3><p>' + grant.total.toLocaleString() + '원 · 판매 매출과 별도</p>' + (grant.reason === 'legacy' ? '<p>이전 버전에 종료한 영업은 지원금을 소급 지급하지 않아요.</p>' : grant.eligible ? '<p>완주 ' + grant.completion.toLocaleString() + ' · 미션 ' + grant.mission.toLocaleString() + ' · 복습 ' + grant.review.toLocaleString() + ' · 이정표 ' + grant.milestone.toLocaleString() + '원</p>' : '<p>15분 완주 · 서로 다른 문제 8개 · 정답 5개부터 지원해요. 조기 종료·한 문제 반복·켜 놓기만으로는 받지 않아요.</p>');
         e('growth-save-result').before(box);
-    } if (save.v26?.lastPayout?.id === growthRuntime.businessId()) {
+    } if ((save.v26?.branches?.length ?? 0) > 0 && save.v26?.lastPayout?.id === growthRuntime.businessId()) {
         const payout = document.createElement('section');
         payout.className = 'growth-grant';
         payout.innerHTML = '<h3>자동 지점 정산</h3><p>' + save.v26.lastPayout.amount.toLocaleString() + '원 · 이번 영업 한 번 정산</p>' + (save.v26.lastPayout.details ?? []).map(d => '<article><strong>' + d.id + '호점 Lv.' + d.level + ' · ' + d.amount.toLocaleString() + '원</strong><p>' + d.customers + ' · ' + d.event + '</p></article>').join('') + '<p>본점 15분 완주 · 서로 다른 문제 8개 · 정답 5개를 채운 경우에만 지급해요.</p>';

@@ -1,5 +1,5 @@
 import{encodeStored,decodeStored}from'./storage-codec.mjs';
-import{validPlayer,validatePair,effectiveCafeLevel}from'./transactions.mjs?v=20261119-1';
+import{validPlayer,validatePair,effectiveCafeLevel}from'./transactions.mjs?v=20261119-2';
 import{validProgress}from'./src/story-state.mjs';
 import{migrateGrowthSave}from'./game/growthSave.js';
 export const DB_NAME='sunshine-independent-test-v1/durable-storage',DB_VERSION=1,NS='sunshine-independent-test-v1/';
