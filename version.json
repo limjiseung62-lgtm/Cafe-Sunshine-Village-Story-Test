@@ -1,6 +1,6 @@
 {
-  "version": "sunshine-part1-qb3-test.1",
-  "build": "20261119-QB3-PUBLIC-1",
+  "version": "sunshine-part1-qb3-test.2",
+  "build": "20261119-QB3-PUBLIC-2",
   "cafeVersion": "3.2.0-growth-only-rc.1",
   "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
   "storyCommit": "aaec997",
@@ -17,5 +17,6 @@
   "integrationReview": "4886abf",
   "transport": "gzip-original-sha256",
   "operationalApproval": false,
-  "productionReady": false
+  "productionReady": false,
+  "publicSVGPreparation": "on-demand-display-after-scoped-approval"
 }

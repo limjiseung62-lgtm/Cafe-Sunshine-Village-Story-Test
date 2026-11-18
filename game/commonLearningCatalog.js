@@ -44,6 +44,8 @@ export class CommonLearningCatalog extends QuestionPackCatalog {
         const lean = typeof bank.getCandidateMetadata === 'function', candidates = lean ? bank.getCandidateMetadata(scope) : bank.getCandidates(scope);
         let seeded = false;
         for (const candidate of candidates) {
+            // RC1 scoped rows are already hash-verified; prepare only the native handoff seed.
+            if (lean && loaded.manifestSHA256 === '2947f91645686b9fc3b13bae9aa4c7f26e6180e1c623c91da5f935efe4a361fb' && seeded) continue;
             const q = bank.getQuestion(candidate.questionRef);
             if (ids.has(q.questionId))
                 continue;
