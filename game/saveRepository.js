@@ -1,4 +1,4 @@
-import{storageFailure}from'../storage-errors.mjs?v=20261118-9';
+import{storageFailure}from'../storage-errors.mjs?v=20261119-1';
 import { hasGrowthWriteLock, supportsGrowthLock } from './growthWriteLock.js';
 import { validateGrowthSave, migrateGrowthSave } from './growthSave.js';
 export const growthStorageKey = 'cafe-learning-tycoon.growth.v1';

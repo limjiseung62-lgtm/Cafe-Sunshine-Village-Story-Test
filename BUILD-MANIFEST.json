@@ -1,7 +1,7 @@
 {
   "version": {
-    "version": "sunshine-part1-test.7",
-    "build": "20261118-9",
+    "version": "sunshine-part1-test.8",
+    "build": "20261119-1",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -373,7 +373,7 @@
     {
       "file": "bootstrap.mjs",
       "bytes": 11139,
-      "sha256": "4ddf928b83db091a10519e905524fe2c93401d6103e13ddfc0d6cbcf77740760"
+      "sha256": "126bd58ccab00616c39714ed0384e7d4000e94d4208c6c544536199555e25e0a"
     },
     {
       "file": "game/.gitattributes",
@@ -3018,7 +3018,7 @@
     {
       "file": "game/index.html",
       "bytes": 3388,
-      "sha256": "2812dfd7787bc50b7704cc990e3f65773f6281e6ce336685551a49479097743e"
+      "sha256": "e494682be080423732a2fa5f6b5f0513d8fba801f6afd399d7cce2e4c6ee3472"
     },
     {
       "file": "game/integrated.css",
@@ -3148,7 +3148,7 @@
     {
       "file": "game/main.js",
       "bytes": 86154,
-      "sha256": "5c4acb68c20c229daf2ca503a39b1779e14f4a83c6d2b40be95ecb7a6cf43ede"
+      "sha256": "8fdd9bb80d3fbd204b42c96605848405d074f35724f77ba763b2dcfd2dc2b314"
     },
     {
       "file": "game/managementAlbum.js",
@@ -3443,7 +3443,7 @@
     {
       "file": "game/modeUi.js",
       "bytes": 39734,
-      "sha256": "75d522940b0f3f22d6e906adb33a6d14577d476dc8bacacb0b33795f6c31b37b"
+      "sha256": "3506e123fbb88258de58c622f5b02702c2222589183a6f8ad29ea2e173506e44"
     },
     {
       "file": "game/motionExpansionCatalog.js",
@@ -3673,7 +3673,7 @@
     {
       "file": "game/renewalTutorialUi.js",
       "bytes": 6408,
-      "sha256": "6087c1f04afb0a2f58dd1cad18903ca1287846c05b021f5bc4f405e0bbb007c7"
+      "sha256": "6d8561dceac8a0d4524a161d3bf8ea770e53056952c5a3faa0992790b0830bed"
     },
     {
       "file": "game/resultViewMemory.js",
@@ -3683,7 +3683,7 @@
     {
       "file": "game/saveRepository.js",
       "bytes": 11287,
-      "sha256": "13a0e18f2a0a7547f6204bd0412541be68d1629c475c106d9497e41e9966175a"
+      "sha256": "c042f728deb38651beadbe099fd478792838a734dc06969de0a2cfefc806d50b"
     },
     {
       "file": "game/scienceOperational.js",
@@ -3943,7 +3943,7 @@
     {
       "file": "game/v30CommonEntry.js",
       "bytes": 2606,
-      "sha256": "e4603997f94c880d1608ae287a9155ee00f8769991b4499b5608284ca88a3126"
+      "sha256": "aa9832b70671d6a901efa1d3db8440a344f364bdb25fec50256e91fa45933658"
     },
     {
       "file": "game/version.json",
@@ -4043,12 +4043,12 @@
     {
       "file": "game-bootstrap.mjs",
       "bytes": 889,
-      "sha256": "120d34e976bc2f7e0f0ce100e3860082a4be7004bd25c0fa0afe326bd8087bd1"
+      "sha256": "da6c3ac6d1b99f2b286d7932625a08b6b9c2fd8dd7428a326d846836a43d07a6"
     },
     {
       "file": "index.html",
       "bytes": 4987,
-      "sha256": "e87e9e8e018313e51ef1d0acba503466663f611849e499dc33266d128b5a1130"
+      "sha256": "690a3fb0a61caf9fbd722bfc3acb7ad3b1608e90790dad2d7183a39f4c45f84c"
     },
     {
       "file": "MOBILE_STORAGE_ARCHITECTURE.md",
@@ -4063,7 +4063,7 @@
     {
       "file": "README.md",
       "bytes": 1236,
-      "sha256": "64ef222e783e442947157b2fbb2cb7d479ef7d1b1292268de0b1633fde1f42d7"
+      "sha256": "60c03c13ed2c0fee3d36067fe37cc65e3e37b42d5893b77432cd55441f81fd4d"
     },
     {
       "file": "src/ending-stage.mjs",
@@ -4148,7 +4148,7 @@
     {
       "file": "start-over.mjs",
       "bytes": 5301,
-      "sha256": "d3076b3b50b8dcce8583fe54f565d22440b7160968c4e3fd01888e6998bae860"
+      "sha256": "f3f00d4cfac70e704aa8dd19bcfa6eb3be23f2611e658684c3184de1c30fbd7a"
     },
     {
       "file": "storage-codec.mjs",
@@ -4158,7 +4158,7 @@
     {
       "file": "storage-engine.mjs",
       "bytes": 9685,
-      "sha256": "169bf615601c991857f0160a0be8f7eed28b7e2a9cf2ecabf36019072abc8d63"
+      "sha256": "67b85fab087579eb33407fa25ae06055fdf398ebe917a58ca105efbcb7f8de34"
     },
     {
       "file": "storage-errors.mjs",
@@ -4167,8 +4167,8 @@
     },
     {
       "file": "storage-init.mjs",
-      "bytes": 7013,
-      "sha256": "b2923efc70ec5041d799c274a1b672392a0baaa9c2de8fba0d64d847000afae8"
+      "bytes": 7201,
+      "sha256": "8259d05d2e581b144a83d642acbed4c3d08162261c881cf2fe480dc9fcde6c02"
     },
     {
       "file": "STORAGE-LICENSES.md",
@@ -4203,7 +4203,7 @@
     {
       "file": "version.json",
       "bytes": 402,
-      "sha256": "d5540f709c76adb95b8ac6dfd2d1a06c5f849d3ee72face106f84afd3e1249ec"
+      "sha256": "8b90e88315138e68aee9b9012cb8b46f4f4d8c811e8ba5fba42ef0275ac21ffa"
     }
   ],
   "changed": [

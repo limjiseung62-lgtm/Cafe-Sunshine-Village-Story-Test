@@ -1,6 +1,6 @@
 import{encodeStored,decodeStored}from'./storage-codec.mjs';
-import{createDurableHub,bindCafeWrite,recoverPreviousDatabase,MAIN}from'./storage-engine.mjs?v=20261118-9';
-import{storageFailure}from'./storage-errors.mjs?v=20261118-9';
+import{createDurableHub,bindCafeWrite,recoverPreviousDatabase,MAIN}from'./storage-engine.mjs?v=20261119-1';
+import{storageFailure}from'./storage-errors.mjs?v=20261119-1';
 export const NAMESPACE='sunshine-independent-test-v1/';let prepared=false,nativeOpen,rawStorage,rawSession,native;const facades=new WeakMap();
 export function prepareStorageIsolation(){if(prepared)return;prepared=true;const p=Storage.prototype;native={get:p.getItem,set:p.setItem,remove:p.removeItem,key:p.key,length:Object.getOwnPropertyDescriptor(p,'length').get};try{rawStorage=globalThis.localStorage}catch(e){rawStorage={error:e}}try{rawSession=globalThis.sessionStorage}catch{}
  nativeOpen=indexedDB.open.bind(indexedDB);const del=indexedDB.deleteDatabase.bind(indexedDB);indexedDB.open=(n,v)=>nativeOpen(NAMESPACE+n,v);indexedDB.deleteDatabase=n=>del(NAMESPACE+n);
@@ -20,7 +20,24 @@ export async function installStorage(){if(globalThis.__SUNSHINE_ISOLATED)return;
  globalThis.__SUNSHINE_STORAGE_FLUSH=()=>hub.flush();globalThis.__SUNSHINE_STORAGE_STATE=()=>hub.diagnostics();Object.defineProperty(globalThis,'__SUNSHINE_STORAGE_BLOCKED',{configurable:true,get:()=>hub.blocked});globalThis.__SUNSHINE_ISOLATED=true;
  installStatus(hub);await hub.flush();
 }
-function installStatus(hub){let panel;const paint=()=>{if(!document.body)return;if(!hub.blocked){panel?.close();panel?.remove();panel=null;const s=document.getElementById('save-status');if(s?.dataset.idbPending){s.textContent='저장 완료 ✓';delete s.dataset.idbPending;}return}if(!panel){panel=document.createElement('dialog');panel.id='sunshine-storage-status';panel.style.cssText='max-width:min(90vw,480px);padding:24px;border:2px solid #66805a;border-radius:18px;background:#fff9ec;color:#294331';panel.addEventListener('cancel',e=>e.preventDefault());document.body.append(panel);panel.showModal();}panel.replaceChildren();const title=document.createElement('h2'),text=document.createElement('p');title.textContent=hub.error?'저장을 완료하지 못했어요':'기록을 안전하게 저장하고 있어요';text.textContent=hub.error?storageFailure(hub.error).message:'IndexedDB 저장 완료를 확인하고 있어요. 잠시만 기다려 주세요.';panel.append(title,text);if(hub.error){const retry=document.createElement('button'),reload=document.createElement('button');retry.textContent='다시 저장하고 카페 열기';reload.textContent='마지막 정상 저장 다시 열기';for(const b of[retry,reload])b.style.cssText='min-height:48px;margin:8px;padding:12px';retry.onclick=async()=>{retry.disabled=true;try{await hub.retry();location.reload()}catch{paint()}};reload.onclick=()=>location.reload();panel.append(retry,reload)}};hub.subscribe(paint);paint();addEventListener('pagehide',()=>{void hub.flush().catch(()=>{})});document.addEventListener('click',e=>{if(hub.blocked&&!panel?.contains(e.target)){e.preventDefault();e.stopImmediatePropagation()}},true);document.addEventListener('keydown',e=>{if(hub.blocked&&!panel?.contains(e.target)){e.preventDefault();e.stopImmediatePropagation()}},true);}
+function installStatus(hub){
+ let panel;
+ const paint=()=>{
+  if(!document.body)return;
+  const status=document.getElementById('save-status');
+  if(!hub.blocked){panel?.close();panel?.remove();panel=null;if(status?.dataset.idbPending){status.textContent='저장 완료 ✓';delete status.dataset.idbPending;}return;}
+  if(status){status.textContent=hub.error?'저장 확인 필요':'저장 중…';status.dataset.idbPending='true';}
+  // Normal saves never open or flash a modal, including slow saves.
+  // Pending input/gameplay barriers remain active until commit + readback.
+  if(!hub.error)return;
+  if(!panel){panel=document.createElement('dialog');panel.id='sunshine-storage-status';panel.style.cssText='max-width:min(90vw,480px);padding:24px;border:2px solid #66805a;border-radius:18px;background:#fff9ec;color:#294331';panel.addEventListener('cancel',e=>e.preventDefault());document.body.append(panel);panel.showModal();}
+  panel.replaceChildren();const title=document.createElement('h2'),text=document.createElement('p');title.textContent='저장을 완료하지 못했어요';text.textContent=storageFailure(hub.error).message;panel.append(title,text);
+  const retry=document.createElement('button'),reload=document.createElement('button');retry.textContent='다시 저장하고 카페 열기';reload.textContent='마지막 정상 저장 다시 열기';for(const b of[retry,reload])b.style.cssText='min-height:48px;margin:8px;padding:12px';retry.onclick=async()=>{retry.disabled=true;try{await hub.retry();location.reload()}catch{paint()}};reload.onclick=()=>location.reload();panel.append(retry,reload);
+ };
+ hub.subscribe(paint);paint();addEventListener('pagehide',()=>{void hub.flush().catch(()=>{})});
+ document.addEventListener('click',e=>{if(hub.blocked&&!panel?.contains(e.target)){e.preventDefault();e.stopImmediatePropagation()}},true);
+ document.addEventListener('keydown',e=>{if(hub.blocked&&!panel?.contains(e.target)){e.preventDefault();e.stopImmediatePropagation()}},true);
+}
 export const compactExistingCafe=()=>({rewritten:false,backend:'IndexedDB'});
 
 export const recoverPreviousStorage=()=>recoverPreviousDatabase(nativeOpen);
