@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { QB3_CONTINUITY_PIN } from './commonContinuity.js';
 import { portalURL } from './sq-learning/portal-url.mjs';
 import { decodeLaunch, validateLaunch } from './sq-learning/launch.mjs';
 import { nativeChoices, checkResume, checkStart, sameChoices } from './sq-learning/cafe-policy.mjs';
@@ -10,6 +11,7 @@ let historical = false;
 addEventListener('hashchange', () => { if (launch || location.hash.startsWith('#sq'))
     location.reload(); });
 const key = () => 'sq-cafe-launch/' + launch.launchId;
+const continuous = () => launch?.subject === 'math' && launch?.manifestSHA256 === QB3_CONTINUITY_PIN;
 const journal = () => { const raw = localStorage.getItem(key()); return raw ? JSON.parse(raw) : null; };
 export function manualReturn() { location.replace(location.pathname + location.search); }
 function banner(error = '') {
@@ -109,11 +111,11 @@ export async function preflightExternal(resume) {
         checkStart(journal(), !!resume);
         checkResume(launch, choices, resume?.learning?.session?.common, journal());
         if (!preflight)
-            preflight = (async () => { const loaded = await loadCommonRuntime(launch.subject, choices); if (loaded.manifestSHA256 !== launch.manifestSHA256)
+            preflight = (async () => { const loaded = await loadCommonRuntime(launch.subject, choices,{manifestSHA256:launch.manifestSHA256}); if (loaded.manifestSHA256 !== launch.manifestSHA256)
                 throw Error('공급자 manifest가 일치하지 않아요.'); for (const c of choices) {
                 const bank = loaded.runtime.createBank({ semesterKey: c.semesterKey, learningRecordId: 'SQ-CAFE-PREFLIGHT' }), scope = bank.defaultScope(c.unitId);
                 for (const id of c.skillIds) {
-                    const rows = bank.getCandidates({ ...scope, skillIds: [id], levels: c.levels });
+                    const rows = typeof bank.getCandidateMetadata==='function'?bank.getCandidateMetadata({ ...scope, skillIds: [id], levels: c.levels }):bank.getCandidates({ ...scope, skillIds: [id], levels: c.levels });
                     if (!rows.length)
                         throw Error('선택한 학습목표에 공급 가능한 문항이 없어요.');
                 }
@@ -138,13 +140,13 @@ catch (error) {
 export function commitExternal(flow, game) { if (!launch)
     return; if (!flow)
     reject(Error('공통 문제은행 학습 세션이 생성되지 않았어요.')); const old = journal(); if (old?.recordId && old.recordId !== flow.learningRecordId)
-    reject(Error('이 링크의 학습 기록이 변경됐어요.')); localStorage.setItem(key(), JSON.stringify({ status: game.status === 'CLOSED' ? 'completed' : 'started', recordId: flow.learningRecordId, gameSessionId: flow.gameSessionId, mode: game.mode, subject: launch.subject, manifestSHA256: launch.manifestSHA256, choices, startedAt: old?.startedAt ?? Date.now() })); }
+    reject(Error('이 링크의 학습 기록이 변경됐어요.')); localStorage.setItem(key(), JSON.stringify({ status: game.status === 'CLOSED' && !continuous() ? 'completed' : 'started', recordId: flow.learningRecordId, gameSessionId: flow.gameSessionId, mode: game.mode, subject: launch.subject, manifestSHA256: launch.manifestSHA256, choices, startedAt: old?.startedAt ?? Date.now() })); }
 export async function finalizeExternal(flow, game, flush) { if (!launch)
     return; if (!await flush())
     reject(Error('시작 상태를 저장하지 못했어요. 기존 저장을 보관하고 수동 선택으로 돌아가 주세요.')); commitExternal(flow, game); }
 // Local, read-only QA metadata. No answer keys and no setters/control hooks are exposed.
 export function observeExternalGame(game, flow) { if (!game)
-    return; if (launch && flow && game.status === 'CLOSED') {
+    return; if (launch && flow && game.status === 'CLOSED' && !continuous()) {
     const j = journal();
     if (j && j.status !== 'completed')
         localStorage.setItem(key(), JSON.stringify({ ...j, status: 'completed' }));

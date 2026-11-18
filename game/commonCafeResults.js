@@ -1,3 +1,4 @@
+import{prepareCommonDisplay}from'./commonSVGDisplay.js';
 import { compatibleCommonManifest } from './scienceOperational.js';
 import { replaceDownloadGroup } from './commonDownloadGroup.js';
 import { commonRecordEntries, wrapCommonBackup, unpackCommonBackup } from './commonBackup.js';
@@ -5,11 +6,32 @@ import { CommonCafeFlow } from './commonCafeFlow.js';
 import { commonQuestion, commonAnswerText } from './commonLearningCatalog.js';
 import { loadCommonRuntime } from './commonBankLoader.js';
 import { deploymentLocalStorage, deploymentPrefix } from './deploymentStorage.js';
-import { escapeText, renderQuestionText, renderDiagram } from './questionRenderer.js';
+import { escapeText, renderQuestionText, renderDiagram, compactCommonDiagram } from './questionRenderer.js';
 import { worksheetHtml } from './twinWorksheet.js';
 const mounted = new WeakMap();
 const archiveExpected = new WeakMap();
-export async function restoreCommonArchive(flow, saved) { const raw = deploymentLocalStorage.getItem(archiveKey(saved.learningRecordId)); const cp = raw ? await flow.loaded.module.decode(raw) : saved; await flow.restore(cp); archiveExpected.set(flow, raw); }
+export async function restoreCommonArchive(flow, saved, preferArchive = true) {
+    const raw = deploymentLocalStorage.getItem(archiveKey(saved.learningRecordId));
+    const archived = raw ? await flow.loaded.module.decode(raw) : undefined;
+    // A running checkpoint may be ahead of its last completed-business archive, never behind it.
+    if (!preferArchive && archived) {
+        if (archived.gameSessionId !== saved.gameSessionId)
+            throw Error('다른 학습 기록과 겹쳐요.');
+        for (const old of archived.sources) {
+            const current = saved.sources.find(s => s.id === old.id);
+            if (!current)
+                throw Error('이전 학습 범위를 확인해 주세요.');
+            const a = await flow.loaded.module.decode(old.backup), b = await flow.loaded.module.decode(current.backup);
+            for (const event of a.attempts) {
+                const now = b.attempts.find((x) => x.id === event.id);
+                if (!now || JSON.stringify(now) !== JSON.stringify(event))
+                    throw Error('보관함의 학습 기록이 더 최신이에요. 기록을 덮어쓰지 않았어요.');
+            }
+        }
+    }
+    await flow.restore(preferArchive && archived ? archived : saved);
+    archiveExpected.set(flow, raw);
+}
 const archiveKey = (id) => 'common-record/' + id;
 function download(blob, name, host) { const reader = new FileReader(); reader.onload = () => { for (const old of host.querySelectorAll('a[download]'))
     if (old.download === name)
@@ -31,7 +53,7 @@ async function worksheet(flow, host) { const items = []; for (const s of flow.so
         if (!ref)
             continue;
         const q = s.bank.getQuestion(ref), choice = flow.choices.find(c => c.unitId === q.metadata.unitId && c.semesterKey === 'g' + q.metadata.grade + 's' + q.metadata.semester);
-        items.push({ question: commonQuestion(q, q.metadata.packId, flow.choices, flow.loaded.subject, choice.unitLabel), label: choice.unitLabel, kind: 'twin', previouslySeen: true });
+        items.push({ question: commonQuestion(q, q.metadata.packId, flow.choices, flow.loaded.subject, choice.unitLabel, await prepareCommonDisplay(q)), label: choice.unitLabel, kind: 'twin', previouslySeen: true });
     } const sheet = { packName: flow.loaded.subject === 'math' ? '수학' : '과학', items, skipped: 0 }; for (const answer of [false, true])
     download(new Blob([worksheetHtml(sheet, answer)], { type: 'text/html;charset=utf-8' }), 'cafe-common-' + (answer ? 'answers' : 'worksheet') + '.html', host); }
 export function mountCommonCafeResults(flow, save) { const root = document.getElementById('results'); if (!root)
@@ -56,13 +78,12 @@ async function render(flow, section, save) {
             archiveWarning = e instanceof Error ? e.message : '기록 보관 실패 · JSON으로 백업해 주세요.';
         }
         const s = report.summary;
-        section.innerHTML = '<h3>나의 학습 결과</h3><p>' + escapeText(flow.choices.map(c => c.unitLabel).join(', ')) + '</p><div class="result-grid">' + [['최초 풀이', s.base + '문항'], ['최초 정답률', s.firstAccuracy.percent === null ? '미응시' : s.firstAccuracy.percent + '%'], ['즉시 회복', s.recovered + '개'], ['확정 오답', s.confirmedWrong + '개'], ['남은 오답', report.review.remaining + '개'], ['최종 해결률', report.summary.finalResolution.percent === null ? '미응시' : report.summary.finalResolution.percent + '%']].map(([k, v]) => '<div>' + k + '<strong>' + v + '</strong></div>').join('') + '</div><p>처음 성적은 복습 후에도 바뀌지 않아요. 오답노트는 음식 보상 없이 연습해요.</p><button class="primary" data-common-png="first">학습 결과 PNG 저장</button><button class="secondary" data-common-png="after">복습 후 결과 PNG 저장</button><button class="secondary" data-common-review>오답노트 · 다시 풀 문제</button><button class="secondary" data-common-json>학습 JSON 백업</button><button class="secondary" data-common-sheet>복습지·정답 해설 HTML</button><p role="status" data-common-status></p><div data-common-files></div>';
+        section.innerHTML = '<h3>나의 학습 결과</h3><p>' + escapeText(flow.choices.map(c => c.unitLabel).join(', ')) + '</p><div class="result-grid">' + [['최초 풀이', s.base + '문항'], ['최초 정답률', s.firstAccuracy.percent === null ? '미응시' : s.firstAccuracy.percent + '%'], ['즉시 회복', s.recovered + '개'], ['확정 오답', s.confirmedWrong + '개'], ['남은 오답', report.review.remaining + '개'], ['최종 해결률', report.summary.finalResolution.percent === null ? '미응시' : report.summary.finalResolution.percent + '%']].map(([k, v]) => '<div>' + k + '<strong>' + v + '</strong></div>').join('') + '</div><p>처음 성적은 복습 후에도 바뀌지 않아요. 오답노트는 음식 보상 없이 연습해요.</p><button class="primary" data-common-png="first">학습 결과 PNG 저장</button><button class="secondary" data-common-png="after">복습 후 결과 PNG 저장</button><button class="secondary" data-common-review>오답노트 · 다시 풀 문제</button><button class="secondary" data-common-sheet>복습지·정답 해설 HTML</button><p role="status" data-common-status></p><div data-common-files></div>';
         const status = section.querySelector('[data-common-status]');
         status.textContent = archiveWarning;
         const files = section.querySelector('[data-common-files]');
         const action = (button, task) => button.addEventListener('click', () => { button.disabled = true; void task().catch(e => status.textContent = e instanceof Error ? e.message : '파일을 준비하지 못했어요.').finally(() => button.disabled = false); });
         section.querySelectorAll('[data-common-png]').forEach(button => action(button, async () => { const r = button.dataset.commonPng === 'first' ? flow.firstReport : await flow.report(), pages = await flow.loaded.png.renderReportPNG(r); await replaceDownloadGroup(files, 'png-' + button.dataset.commonPng, pages); status.textContent = pages.length + '페이지를 준비했어요. 아래 파일 링크에서도 저장할 수 있어요.'; }));
-        action(section.querySelector('[data-common-json]'), async () => { const raw = await flow.loaded.module.encode(await flow.snapshot()); download(new Blob([raw], { type: 'application/json' }), 'cafe-common-learning-backup.json', files); });
         action(section.querySelector('[data-common-sheet]'), () => worksheet(flow, files));
         action(section.querySelector('[data-common-review]'), async () => { await openNotebook(flow, async () => { if (!await save())
             throw Error('카페 학습 저장에 실패했어요.'); await archive(flow); }, () => { void render(flow, section, save); }); });
@@ -84,7 +105,7 @@ export async function openNotebook(flow, save, changed) {
         list.textContent = '남아 있는 오답이 없어요!'; for (const note of notes) {
         const q = flow.sources.get(note.sourceId).bank.getQuestion(note.rootQuestionRef), article = document.createElement('article');
         const firstWrong = note.history?.find((a) => a.role === 'base' && a.status === 'incorrect'), firstLabel = q.render.choices.find((c) => c.id === firstWrong?.response)?.text ?? '기록 없음';
-        article.innerHTML = '<p>' + escapeText(q.metadata.grade + '학년 ' + q.metadata.semester + '학기 · ' + (flow.choices.find(c => c.unitId === q.metadata.unitId)?.unitLabel ?? '학습 개념')) + '</p><p>' + renderQuestionText(q.render.text) + '</p>' + renderDiagram(q.render.svg, '도형', true) + '<p>처음 선택: ' + renderQuestionText(firstLabel) + '</p><details><summary>정답·해설 확인</summary><p>' + renderQuestionText(commonAnswerText(q)) + '</p><p>' + renderQuestionText(q.assessment.explanation) + '</p></details><p>현재 연속 정답 ' + (note.consecutiveCorrect ?? 0) + '/2</p><button class="primary">도전하기</button>';
+        article.innerHTML = '<p>' + escapeText(q.metadata.grade + '학년 ' + q.metadata.semester + '학기 · ' + (flow.choices.find(c => c.unitId === q.metadata.unitId)?.unitLabel ?? '학습 개념')) + '</p><p>' + renderQuestionText(q.render.text) + '</p>' + renderDiagram(compactCommonDiagram(await prepareCommonDisplay(q)), '도형', true) + '<p>처음 선택: ' + renderQuestionText(firstLabel) + '</p><details><summary>정답·해설 확인</summary><p>' + renderQuestionText(commonAnswerText(q)) + '</p><p>' + renderQuestionText(q.assessment.explanation) + '</p></details><p>현재 연속 정답 ' + (note.consecutiveCorrect ?? 0) + '/2</p><button class="primary">도전하기</button>';
         article.querySelector('button').onclick = () => { if (busy)
             return; busy = true; void flow.startChallenge(note.sourceId, note.reviewEntryId).then(async (r) => { if (r.status === 'started' || r.status === 'resumed') {
             if (r.status === 'resumed')
@@ -103,7 +124,7 @@ export async function openNotebook(flow, save, changed) {
         p.textContent = r.status === 'completed' ? '2/2 복습 완료! 처음 성적과 이력은 그대로 보존돼요.' : '후보 부족 또는 도전 대기 상태예요. 다른 개념으로 바꾸지 않아요.';
         dialog.prepend(p);
         return;
-    } const q = r.question; dialog.dataset.commonQuestionId = q.questionId; dialog.innerHTML = '<h2>오답노트 도전 · 음식 보상 없음</h2><p>' + renderQuestionText(q.render.text) + '</p>' + renderDiagram(q.render.svg, '도형', true) + '<div class="choices" data-answers></div><p role="status" data-feedback></p><button class="secondary" data-close>나중에 하기</button>'; dialog.querySelector('[data-close]').addEventListener('click', () => { if (busy)
+    } const q = r.question; await globalThis.__QB3_onDelivery?.(q,r.delivery,null); dialog.dataset.commonQuestionId = q.questionId; dialog.innerHTML = '<h2>오답노트 도전 · 음식 보상 없음</h2><p>' + renderQuestionText(q.render.text) + '</p>' + renderDiagram(compactCommonDiagram(await prepareCommonDisplay(q)), '도형', true) + '<div class="choices" data-answers></div><p role="status" data-feedback></p><button class="secondary" data-close>나중에 하기</button>'; dialog.querySelector('[data-close]').addEventListener('click', () => { if (busy)
         return; busy = true; void flow.sources.get(sourceId).engine.pauseChallenge(id).then(save).then(() => { busy = false; close(); }).finally(() => busy = false); }); for (const c of q.render.choices) {
         const b = document.createElement('button');
         b.className = 'answer-choice';
@@ -143,7 +164,7 @@ catch {
     b.className = 'secondary';
     b.textContent = ({ 'math': '수학', 'science': '과학', 'korean-literacy': '국어', 'social-studies': '사회' }[item.subject] ?? '학습') + ' · ' + item.scope;
     b.onclick = () => { b.disabled = true; void (async () => { const raw = deploymentLocalStorage.getItem(archiveKey(item.id)); if (!raw)
-        throw Error('기록 파일을 찾지 못했어요.'); const loaded = await loadCommonRuntime(item.subject, JSON.parse(raw)?.body?.choices), cp = await loaded.module.decode(raw), flow = new CommonCafeFlow(loaded, cp.choices, cp); await flow.restore(cp); archiveExpected.set(flow, raw); picker.close(); picker.remove(); const host = document.createElement('dialog'); host.className = 'common-notebook'; host.innerHTML = '<div id="common-past-result"></div><button class="secondary" data-close>닫기</button>'; document.body.append(host); const section = host.querySelector('#common-past-result'); await render(flow, section, async () => { await archive(flow); return true; }); host.querySelector('[data-close]').addEventListener('click', () => { host.close(); host.remove(); }); host.showModal(); })().catch(e => { b.after(document.createTextNode(e.message)); b.disabled = false; }); };
+        throw Error('기록 파일을 찾지 못했어요.'); const loaded = await loadCommonRuntime(item.subject, JSON.parse(raw)?.body?.choices,{manifestSHA256:JSON.parse(raw)?.body?.manifestSHA256}), cp = await loaded.module.decode(raw), flow = new CommonCafeFlow(loaded, cp.choices, cp); await flow.restore(cp); archiveExpected.set(flow, raw); picker.close(); picker.remove(); const host = document.createElement('dialog'); host.className = 'common-notebook'; host.innerHTML = '<div id="common-past-result"></div><button class="secondary" data-close>닫기</button>'; document.body.append(host); const section = host.querySelector('#common-past-result'); await render(flow, section, async () => { await archive(flow); return true; }); host.querySelector('[data-close]').addEventListener('click', () => { host.close(); host.remove(); }); host.showModal(); })().catch(e => { b.after(document.createTextNode(e.message)); b.disabled = false; }); };
     picker.querySelector('[data-list]').append(b);
 } if (!list.length)
     picker.querySelector('[data-list]').textContent = '영업이 끝나면 이곳에서 다시 복습할 수 있어요.'; picker.showModal(); }; card.append(button); }); }

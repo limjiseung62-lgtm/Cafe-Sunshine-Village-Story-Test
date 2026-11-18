@@ -12,3 +12,31 @@ export function safeCommonDiagram(svg) { if (safeDiagram(svg))
     invalid = true; return 'approved-local-fragment'; }); return !invalid && safeDiagram(checked); }
 export function renderDiagram(svg, label = '도형', allowLocalRefs = false) { if (!svg || !(safeDiagram(svg) || allowLocalRefs && safeCommonDiagram(svg)))
     return ''; const alt = /<title>([^<]+)<\/title>/.exec(svg)?.[1] ?? '문제에 제시된 도형'; const src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); return '<figure class="question-diagram"><img src="' + escapeText(src) + '" alt="' + escapeText(alt) + '"><details><summary>' + escapeText(label) + ' 확대 / 접기</summary><div class="diagram-scroll"><img src="' + escapeText(src) + '" alt="' + escapeText(alt) + ' · 확대"></div></details></figure>'; }
+/** Lossless display-only compaction; originals and security limits remain unchanged. */
+export function compactCommonDiagram(svg) {
+    if (!svg || svg.length < 60000)
+        return svg;
+    let result = svg.replace(/\sdata-[\w-]+\s*=\s*(?:"[^"]*"|'[^']*')/g, '');
+    result = result.replace(/(?:<polygon\b[^>]*\/>\s*){2,}/g, run => {
+        const shapes = [...run.matchAll(/<polygon\b[^>]*\/>/g)].map(m => m[0]);
+        const attr = (s, name) => [...s.matchAll(/\s(stroke(?:-width)?)\s*=\s*(["'])([^"']*)\2/g)].find(m => m[1] === name)?.[3];
+        const stroke = attr(shapes[0], 'stroke'), width = attr(shapes[0], 'stroke-width');
+        if (!stroke || !width || !/^#[0-9a-f]{3,8}$/i.test(stroke) || !/^\d+(?:\.\d+)?$/.test(width) || shapes.some(s => attr(s, 'stroke') !== stroke || attr(s, 'stroke-width') !== width))
+            return run;
+        return '<g stroke="' + stroke + '" stroke-width="' + width + '">' + run.replace(/\sstroke(?:-width)?\s*=\s*(?:"[^"]*"|'[^']*')/g, '') + '</g>';
+    });
+    result = result.replace(/<polygon\b[^>]*\/>/g, node => {
+        const match = /\bpoints\s*=\s*(["'])([^"']+)\1/.exec(node);
+        if (!match)
+            return node;
+        const values = match[2].trim().split(/[\s,]+/);
+        if (values.length !== 6 || values.some(v => !/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(v)))
+            return node;
+        let d = 'M' + values[0] + ' ' + values[1];
+        for (let i = 2; i < 6; i += 2)
+            d += values[i] === values[i - 2] ? 'V' + values[i + 1] : values[i + 1] === values[i - 1] ? 'H' + values[i] : 'L' + values[i] + ' ' + values[i + 1];
+        d += 'Z';
+        return node.replace('<polygon', '<path').replace(match[0], 'd="' + d + '"');
+    });
+    return result;
+}

@@ -1,3 +1,4 @@
+import { sameContinuousStudy } from './commonContinuity.js';
 import { tutorialPauseCredit } from './tutorialPause.js';
 import { startFinalPayroll, settleFinalPayroll } from './finalPayroll.js';
 import { adoptFinalGrowth, finalLocalDeployment } from './finalGrowth.js';
@@ -16,6 +17,8 @@ import { restoreGrowthRun, captureRun, studyRecord, adaptiveLevel } from './grow
 import { LearningSession } from './learningSession.js';
 import { providerForPool } from './learningIntegration.js';
 class GrowthRuntime {
+    continuedCommon = new WeakMap();
+    continuesCommon(g) { return this.continuedCommon.has(g); }
     carry = [];
     grants = null;
     anchorPause = 0;
@@ -54,7 +57,8 @@ class GrowthRuntime {
         setGrowthExpected(restored.game, save);
         this.pending.set(restored.game, { save, state: { engine: restored.learning, analytics: restored.analytics, readVisits: restored.readVisits, specialAttempt: restored.specialAttempt } });
         return restored.game;
-    } const clean = structuredClone(save); delete clean.eventState; const g = createGrowthSession(clean, Math.random, 900); setGrowthExpected(g, save); const copy = structuredClone(save); if (copy.campaign)
+    } const priorCommon = save.campaign?.run?.closed ? save.campaign.run.learning.session.common : undefined; const clean = structuredClone(save); delete clean.eventState; const g = createGrowthSession(clean, Math.random, 900); setGrowthExpected(g, save); if (sameContinuousStudy(priorCommon, pool))
+        this.continuedCommon.set(g, structuredClone(priorCommon)); const copy = structuredClone(save); if (copy.campaign)
         delete copy.campaign.run; this.pending.set(g, { save: copy, businessId }); return g; }
     begin(g, pool, fallback, getState) { if (g.mode !== 'CAFE_GROWTH') {
         this.current = null;
@@ -68,7 +72,8 @@ class GrowthRuntime {
         else
             delete this.initial.studies[packId];
     } const previous = this.initial.studies[packId]; if (!pending?.state && previous)
-        state = { ...fallback, engine: new LearningSession(providerForPool(pool), Math.random, previous.progress, undefined, { difficulty: () => this.level(), seenIds: previous.seen }) }; state.engine.setDifficulty(() => this.level()); return state; }
+        state = { ...fallback, engine: new LearningSession(providerForPool(pool), Math.random, previous.progress, undefined, { difficulty: () => this.level(), seenIds: previous.seen }) }; const prior = this.continuedCommon.get(g); if (!state.engine.common && sameContinuousStudy(prior, pool))
+        state.engine.common = structuredClone(prior); state.engine.setDifficulty(() => this.level()); return state; }
     savedFor(g) { return this.pending.get(g)?.save; }
     businessId() { return this.meta?.id ?? ''; }
     level() { if (!this.meta || !this.state || !this.current)

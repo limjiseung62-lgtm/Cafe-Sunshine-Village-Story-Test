@@ -1,12 +1,13 @@
+import { prepareCommonDisplay } from './commonSVGDisplay.js';
 import { QuestionPackCatalog } from './questionPack.js';
 import { loadCommonRuntime } from './commonBankLoader.js';
-import { safeCommonDiagram } from './questionRenderer.js';
+import { safeCommonDiagram, compactCommonDiagram } from './questionRenderer.js';
 export const commonDeployment = () => typeof document !== 'undefined' && ['v30e-city-integrated-local', 'v30e-common-local', 'v30e-v31-local'].includes(document.querySelector('meta[name="cafe-deployment"]')?.getAttribute('content') ?? '');
 export function commonAnswerText(q) { const text = q.render?.choices?.find((c) => c.id === q.assessment?.answer?.choiceId)?.text; if (typeof text !== 'string' || !text)
     throw Error('정답 연결을 확인해 주세요.'); return text; }
-export function commonQuestion(q, packId, choices, subject, unitLabel) { if (q.metadata.questionType !== 'single-choice' || (q.render.inputKind !== undefined && q.render.inputKind !== 'choice') || !Array.isArray(q.render.choices) || new Set(q.render.choices.map((c) => c.text)).size !== q.render.choices.length || q.render.svg && !safeCommonDiagram(q.render.svg))
+export function commonQuestion(q, packId, choices, subject, unitLabel, displaySVG) { const diagram = compactCommonDiagram(displaySVG ?? q.render.svg); if (q.metadata.questionType !== 'single-choice' || (q.render.inputKind !== undefined && q.render.inputKind !== 'choice') || !Array.isArray(q.render.choices) || new Set(q.render.choices.map((c) => c.text)).size !== q.render.choices.length || diagram && !safeCommonDiagram(diagram))
     throw Error('아직 카페에서 검증되지 않은 문항 형식이에요. 다른 문제로 바꿔 채우지 않아요.'); const answer = commonAnswerText(q); if (!answer)
-    throw Error('정답 연결을 확인해 주세요.'); return { problemId: q.questionId, questionId: q.questionId, sourceId: q.questionId, packId, subject: ({ 'math': '수학', 'science': '과학', 'korean-literacy': '국어', 'social-studies': '사회' }[subject]), grade: q.metadata.grade, semester: q.metadata.semester, unit: unitLabel, type: 'multiple_choice', difficulty: q.metadata.difficulty, question: q.render.text, prompt: q.render.text, choices: q.render.choices.map((c) => c.text), choiceIds: q.render.choices.map((c) => c.id), answer, explanation: q.assessment.explanation, hint: q.assessment.hint, diagram: q.render.svg || undefined, skillId: q.metadata.skillIds[0], tags: [unitLabel], packVersion: q.metadata.packVersion, commonRef: q.questionRef, commonChoice: { subject, choices } }; }
+    throw Error('정답 연결을 확인해 주세요.'); return { problemId: q.questionId, questionId: q.questionId, sourceId: q.questionId, packId, subject: ({ 'math': '수학', 'science': '과학', 'korean-literacy': '국어', 'social-studies': '사회' }[subject]), grade: q.metadata.grade, semester: q.metadata.semester, unit: unitLabel, type: 'multiple_choice', difficulty: q.metadata.difficulty, question: q.render.text, prompt: q.render.text, choices: q.render.choices.map((c) => c.text), choiceIds: q.render.choices.map((c) => c.id), answer, explanation: q.assessment.explanation, hint: q.assessment.hint, diagram: diagram || undefined, skillId: q.metadata.skillIds[0], tags: [unitLabel], packVersion: q.metadata.packVersion, commonRef: q.questionRef, commonChoice: { subject, choices } }; }
 export class CommonLearningCatalog extends QuestionPackCatalog {
     subjects;
     legacy;
@@ -14,14 +15,14 @@ export class CommonLearningCatalog extends QuestionPackCatalog {
     resume = null;
     constructor(subjects, legacy) {
         super();
-        this.subjects = subjects;
+        this.subjects = subjects; this.candidateSubjects=subjects;
         this.legacy = legacy;
         for (const s of subjects) {
             const u = s.units.find(u => u.grade === 4 && u.semester === 2 && u.unitId === 'sem2_unit4') ?? s.units[0];
             this.setChoices(s.subject, [{ semesterKey: u.semesterKey, unitId: u.unitId, unitLabel: u.unitLabel }]);
         }
     }
-    prepareResume(value) { this.resume = value ?? null; const c = value?.learning?.session?.common; if (c?.version === 1 && this.subjects.some(s => s.subject === c.subject))
+    prepareResume(value) { this.resume = value ?? null; const c = value?.learning?.session?.common; globalThis.__SUNSHINE_EXPECTED_MATH_PIN=c?.subject==='math'?c.manifestSHA256:null; this.subjects=c?.subject==='math'&&c.manifestSHA256!=='2947f91645686b9fc3b13bae9aa4c7f26e6180e1c623c91da5f935efe4a361fb'?(globalThis.__SUNSHINE_LEGACY_SUBJECTS??this.candidateSubjects):this.candidateSubjects; if (c?.version === 1 && this.subjects.some(s => s.subject === c.subject))
         this.choice.set(c.subject, structuredClone(c.choices)); }
     choices(subject) { return structuredClone(this.choice.get(subject)); }
     setChoices(subject, choices) { const s = this.subjects.find(s => s.subject === subject); if (!choices.length || choices.some(c => !s.units.some(u => u.semesterKey === c.semesterKey && u.unitId === c.unitId && (!c.skillIds || c.skillIds.length > 0 && c.skillIds.every(id => u.skills.some(k => k.id === id))))))
@@ -40,12 +41,18 @@ export class CommonLearningCatalog extends QuestionPackCatalog {
         return this.legacyPack(id); const subject = this.subjects.find(s => s.packId === id); if (!subject)
         return this.legacyPack(id); const choices = this.choices(subject.subject), loaded = await loadCommonRuntime(subject.subject, choices), questions = []; const ids = new Set(); for (const choice of choices) {
         const bank = loaded.runtime.createBank({ semesterKey: choice.semesterKey, learningRecordId: 'CAFE-PREPARATION' }), scope = { ...bank.defaultScope(choice.unitId), ...choice.skillIds ? { skillIds: choice.skillIds } : {}, ...choice.levels ? { levels: choice.levels } : {} };
-        for (const candidate of bank.getCandidates(scope)) {
+        const lean = typeof bank.getCandidateMetadata === 'function', candidates = lean ? bank.getCandidateMetadata(scope) : bank.getCandidates(scope);
+        let seeded = false;
+        for (const candidate of candidates) {
             const q = bank.getQuestion(candidate.questionRef);
             if (ids.has(q.questionId))
                 continue;
             ids.add(q.questionId);
-            questions.push(commonQuestion(q, id, choices, subject.subject, choice.unitLabel));
+            const prepared = commonQuestion(q, id, choices, subject.subject, choice.unitLabel, await prepareCommonDisplay(q));
+            if (!lean || !seeded) {
+                questions.push(prepared);
+                seeded = true;
+            }
         }
     } if (!questions.length)
         throw Error('선택한 범위에 공급 가능한 문항이 없어요.'); const first = questions[0]; return { schemaVersion: 1, packId: id, title: subject.label, subject: subject.label, grade: first.grade, semester: first.semester, unit: first.unit, version: first.packVersion, source: 'approved common bank', questions, templates: [] }; }

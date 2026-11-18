@@ -1,6 +1,6 @@
 {
-  "version": "sunshine-part1-test.9",
-  "build": "20261119-2",
+  "version": "sunshine-part1-qb3-test.1",
+  "build": "20261119-QB3-PUBLIC-1",
   "cafeVersion": "3.2.0-growth-only-rc.1",
   "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
   "storyCommit": "aaec997",
@@ -9,5 +9,13 @@
   "testOnly": true,
   "economyChanged": false,
   "storageBackend": "IndexedDB",
-  "storageDatabaseVersion": 1
+  "storageDatabaseVersion": 1,
+  "publicBaseline": "6a927f0fa736e232a43552935befb6076af98703",
+  "qb3": "3.0.0-rc.1",
+  "deployable": true,
+  "integrationCommit": "40468113bb895c8141ab202301fba3a29d3cde16",
+  "integrationReview": "4886abf",
+  "transport": "gzip-original-sha256",
+  "operationalApproval": false,
+  "productionReady": false
 }

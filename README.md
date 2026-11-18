@@ -1,6 +1,6 @@
 # 다시, 햇살마을 — 독립 공개 테스트
 
-카페 v3.2 c072d23 / 스토리 aaec997, 검수18bb108. 독립 테스트 sunshine-part1-test.9 / build20261119-2.
+카페 v3.2 c072d23 / 스토리 aaec997, 검수18bb108. 독립 테스트 sunshine-part1-test.10 / build20261119-3.
 
 카페·스토리의 영구 저장은 전용 IndexedDB에 보관합니다. 같은 출처의 다른 게임 localStorage가 가득 차 있어도 해당 localStorage에 쓰지 않습니다. 기존 테스트판 localStorage는 삭제하지 않고 검증하여 복제합니다. 다른 게임 저장이나 공식판은 변경하지 않습니다.
 

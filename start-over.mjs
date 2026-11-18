@@ -1,6 +1,6 @@
-import{PLAYER,entries,newPlayer,atomicRestore}from'./transactions.mjs?v=20261119-2';
+import{PLAYER,entries,newPlayer,atomicRestore}from'./transactions.mjs?v=20261119-3';
 import{emptyProgress}from'./src/story-state.mjs';
-import{validateRows,NS}from'./storage-engine.mjs?v=20261119-2';
+import{validateRows,NS}from'./storage-engine.mjs?v=20261119-3';
 export const RESTART_BACKUP='sunshine-restart-backup/1';
 const digest=async rows=>[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(rows))))].map(n=>n.toString(16).padStart(2,'0')).join('');
 export async function restartStoryCafe(s){

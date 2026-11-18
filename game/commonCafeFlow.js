@@ -41,7 +41,7 @@ export class CommonCafeFlow {
     target(c) { if (['korean-literacy', 'social-studies'].includes(this.loaded.subject))
         return undefined; if (!this.levelCache.has(c)) {
         const bank = this.sources.get(c.semesterKey).bank;
-        this.levelCache.set(c, [...new Set(bank.getCandidates(this.selectedScope(c)).map((r) => bank.getQuestion(r.questionRef).metadata.difficulty))].sort((a, b) => a - b));
+        this.levelCache.set(c, [...new Set((typeof bank.getCandidateMetadata === 'function' ? bank.getCandidateMetadata(this.selectedScope(c)).map((r) => r.difficulty) : bank.getCandidates(this.selectedScope(c)).map((r) => bank.getQuestion(r.questionRef).metadata.difficulty)))].sort((a, b) => a - b));
     } const levels = this.levelCache.get(c); return this.difficulty ? levels.reduce((best, n) => Math.abs(n - this.difficulty()) < Math.abs(best - this.difficulty()) ? n : best, levels[0]) : undefined; }
     scope(c) { return this.sources.get(c.semesterKey).bank.defaultScope(c.unitId); }
     selectedScope(c) { const s = this.scope(c); return { ...s, skillIds: c.skillIds ?? s.skillIds, levels: c.levels ?? s.levels }; }

@@ -1,6 +1,7 @@
+import{prepareCommonDisplay}from'./commonSVGDisplay.js';
 import{pollFeatureNotices}from'./featureVisibility.js';
 import { recoverInteriorEditing } from './interiorPause.js';
-import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261119-2';
+import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261119-3';
 import { finalizeExternal, observeExternalGame } from './externalLaunch.js';
 import { releaseResultView } from './resultViewMemory.js';
 import { kitchenRequiredSpace, kitchenStages, kitchenFloorLabel } from './productionKitchen.js';
@@ -53,7 +54,7 @@ import { installAssetFallbacks } from './assetFallback.js';
 import { createLearning } from './learningIntegration.js';
 import { renderQuestionText, escapeText, renderDiagram } from './questionRenderer.js';
 import { GameFeel } from './gameFeel.js';
-import { ModeFlow } from './modeUi.js?storageBuild=20261119-2';
+import { ModeFlow } from './modeUi.js?storageBuild=20261119-3';
 import { itemCatalog, specialNames, specialIcons } from './phase4Config.js';
 import { showOrderBubble, syncOrderBubble, assetSignature } from './presentation.js';
 import { personalityLabels } from './customerRules.js';
@@ -139,13 +140,12 @@ export async function startSession(session, pool, questionRandom, learningOption
     throw Error('이 버전은 내 카페 키우기만 지원해요. 기존 기록은 유지돼요.'); commonBusy = true; commonFlow = null; classroomElapsed = null; el('workers').innerHTML = ''; el('seats').innerHTML = ''; el('decor').innerHTML = ''; delete el('cafe-room').dataset.artLevel; guestLooks.clear(); preloadMotionSheets(); selectedGuest = null; detailKey = ''; app.classList.add('in-session'); game = session; recoverInteriorEditing(game); game.enableEvents(); if (game.status === 'CLOSED')
     game.events.close(); runUi.start(); clearTimeout(outcomeTimer); game.service.manualOwner = true; game.enableHallGrowth(); departure = new DepartureDialogue(); departureKey = ''; manualTipShown = false; autoTipShown = game.service.paid.length > 0; lastStaffCount = game.service.paid.length; hintUntil = 0; el('service-hint').hidden = true; receipt = []; stockKey = ""; displayedResult = null; clock.start(); ux.start(); feel.start(session); scene = new SpatialScene(game.cafeLevel, game.cafe.maxCustomers, true); scene.sync(game); readVisits.clear(); rereading = false; engine = createLearning(pool, session.policy.persistence === 'saved-cafe', questionRandom, learningOptions); analytics = new LearningAnalyticsV1(engine.provider.packId); const growthState = growthRuntime.begin(session, pool, { engine, analytics, readVisits: [] }, () => ({ engine, analytics, readVisits: [...readVisits], specialAttempt })); engine = growthState.engine; analytics = growthState.analytics; const commonSetup = pool?.[0]?.commonChoice; if (commonSetup) {
     try {
-        const saved = engine.common, loaded = await loadCommonRuntime(commonSetup.subject, saved?.choices ?? commonSetup.choices);
+        const saved = engine.common, loaded = await loadCommonRuntime(commonSetup.subject, saved?.choices ?? commonSetup.choices,{manifestSHA256:saved?.manifestSHA256});
         commonFlow = new CommonCafeFlow(loaded, saved?.choices ?? commonSetup.choices, saved);
         if (saved) {
-            if (session.status === 'CLOSED')
-                await restoreCommonArchive(commonFlow, saved);
-            else
-                await commonFlow.restore(saved);
+            await restoreCommonArchive(commonFlow, saved, session.status === 'CLOSED' || growthRuntime.continuesCommon(session));
+            if (growthRuntime.continuesCommon(session))
+                commonFlow.firstReport = undefined;
         }
         if (session.mode === 'CAFE_GROWTH')
             commonFlow.setDifficulty(() => growthRuntime.level());
@@ -810,7 +810,8 @@ async function openCommonQuestion() { if (!commonFlow || commonBusy || game?.sta
         return;
     }
     const q = next.question, choice = flow.choices.find(c => c.unitId === q.metadata.unitId && Number(c.semesterKey[1]) === q.metadata.grade && Number(c.semesterKey[3]) === q.metadata.semester);
-    active = commonQuestion(q, engine.provider.packId, flow.choices, flow.loaded.subject, choice.unitLabel);
+    await globalThis.__QB3_onDelivery?.(q,next.delivery,game);
+    active = commonQuestion(q, engine.provider.packId, flow.choices, flow.loaded.subject, choice.unitLabel, await prepareCommonDisplay(q));
     el('problem-panel').dataset.commonQuestionId = q.questionId;
     Object.assign(active, { isTwin: next.delivery.role === 'instant-twin', isRemediation: next.delivery.role === 'instant-twin', sourceQuestionId: next.delivery.role === 'instant-twin' ? next.delivery.rootQuestionRef.questionId : undefined });
     renderProblem();

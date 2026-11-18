@@ -42,7 +42,7 @@ export async function prepareGrowthStudySwitch(source, oldPool, pool) {
         const key = 'common-record/' + oldCommon.learningRecordId;
         const existing = storage.getItem(key);
         if (!existing) {
-            const bank = await loadCommonRuntime(oldCommon.subject, oldCommon.choices);
+            const bank = await loadCommonRuntime(oldCommon.subject, oldCommon.choices,{manifestSHA256:oldCommon.manifestSHA256});
             const archived = new CommonCafeFlow(bank, oldCommon.choices, oldCommon);
             await archived.restore(oldCommon);
             records.push({ key, raw: await bank.module.encode(oldCommon) });

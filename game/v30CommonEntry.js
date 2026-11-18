@@ -4,7 +4,7 @@ import { configureQuestionCatalog, QuestionPackCatalog } from './questionPack.js
 import { CommonLearningCatalog } from './commonLearningCatalog.js';
 import { commonCatalogSHA256 } from './commonCatalogPin.js';
 try {
-    const response = await fetch('assets/common-learning/catalog.json');
+    const response = await fetch('assets/qb3/catalog.json');
     if (!response.ok)
         throw Error('학습 범위 목록을 불러오지 못했어요.');
     const bytes = new Uint8Array(await response.arrayBuffer()), actual = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes)), x => x.toString(16).padStart(2, '0')).join('');
@@ -14,11 +14,12 @@ try {
     const additions = await (await fetch('./sq-learning/approved-registry.json')).json();
     for (const u of additions.units)
         catalog.subjects.push({ subject: u.subject, label: u.subject === 'korean-literacy' ? '국어' : '사회', packId: additions.providers[u.subject].releaseRef.split('@')[0], units: [{ grade: u.grade, semester: u.semester, semesterKey: 'g4s2', unitId: u.id, unitLabel: u.title.replace(/^\d+\. /, ''), order: u.subject === 'korean-literacy' ? 3 : 2, skills: u.objectives.map((o) => ({ id: o.id, label: o.label })) }] });
+    const legacyBytes=new Uint8Array(await(await fetch('assets/common-learning/catalog.json')).arrayBuffer());if(Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',legacyBytes)),x=>x.toString(16).padStart(2,'0')).join('')!=='70c01dc6ef90165f755c8d59a904e1ebb7506c45bc0e8941c1d9dfa138ea58df')throw Error('이전 학습 범위 목록 해시가 달라요.');const legacyCatalog=JSON.parse(new TextDecoder().decode(legacyBytes));legacyCatalog.subjects.push(...catalog.subjects.filter(x=>['korean-literacy','social-studies'].includes(x.subject)));globalThis.__SUNSHINE_LEGACY_SUBJECTS=legacyCatalog.subjects;
     const instance = new CommonLearningCatalog(catalog.subjects, new QuestionPackCatalog());
     await attachExternal(instance);
     configureQuestionCatalog(instance);
     installCommonArchiveMenu();
-    await import('./main.js?storageBuild=20261119-2');
+    await import('./main.js?storageBuild=20261119-3');
 }
 catch (error) {
     const box = document.createElement('section');

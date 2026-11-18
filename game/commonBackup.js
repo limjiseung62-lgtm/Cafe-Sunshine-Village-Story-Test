@@ -27,7 +27,7 @@ export async function unpackCommonBackup(text) {
         const body = JSON.parse(row.raw)?.body;
         if (!body || !['math', 'science', 'korean-literacy', 'social-studies'].includes(body.subject) || row.key !== 'common-record/' + body.learningRecordId || !/^LR-[a-z0-9-]+$/i.test(body.learningRecordId) || rows.some(r => r.key === row.key))
             throw Error('학습 기록 연결이 달라요.');
-        const loaded = await loadCommonRuntime(body.subject, body.choices), cp = await loaded.module.decode(row.raw), flow = new CommonCafeFlow(loaded, cp.choices, cp);
+        const loaded = await loadCommonRuntime(body.subject, body.choices,{manifestSHA256:body.manifestSHA256}), cp = await loaded.module.decode(row.raw), flow = new CommonCafeFlow(loaded, cp.choices, cp);
         await flow.restore(cp);
         const old = storage.getItem(row.key);
         if (old && old !== row.raw)

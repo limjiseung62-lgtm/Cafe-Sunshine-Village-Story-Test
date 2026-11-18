@@ -1,4 +1,5 @@
-import{storageFailure}from'../storage-errors.mjs?v=20261119-2';
+import{storageFailure}from'../storage-errors.mjs?v=20261119-3';
+import { sameContinuousStudy, isContinuousCheckpoint } from './commonContinuity.js';
 import { externalStudyChangeRequested, loadHistoricalStudy } from './externalLaunch.js';
 import { prepareGrowthStudySwitch } from './growthStudySwitch.js';
 import { mountRecoveryStart, mountBackupControls, mountPlayingBackup, mountEndBackup } from './backupRecoveryUi.js';
@@ -30,7 +31,7 @@ import { chooseLongMission, prepareLongState } from './longGrowthUi.js';
 import { growthRuntime } from './growthRuntime.js';
 import { createGrowthSave } from './growthSave.js';
 import { GrowthSessionController } from './growthSession.js';
-import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261119-2';
+import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261119-3';
 import { policyFor } from './sessionModes.js';
 import { questionCatalog } from './questionPack.js';
 import { escapeText } from './questionRenderer.js';
@@ -214,6 +215,8 @@ export class ModeFlow {
         }
         const ready = read.status === 'ready', save = ready ? read.save : createProgressiveGrowthSave();
         this.freshGrowth = fresh || !save.campaign?.run || !!save.campaign.run.closed;
+        if (save.campaign?.run?.closed && isContinuousCheckpoint(save.campaign.run.learning.session.common))
+            this.growthPackChoice = save.campaign.run.packId;
         const level = save.cafeLevel, next = Object.entries(featureLevels).find(([, n]) => n > level), nextName = { missions: '미션과 특별 손님', recruitment: '직원 구인', cake: '케이크 미니게임', decor: '카페 꾸미기', branch: '카페 성장 분기', reviews: '리뷰와 단골', research: '연구와 운영 전략', village: '마을 탐험과 투자', specialization: '카페 전문화', education: '직원 교육과 특별 영업', delivery: '배달과 축제', franchise: '자동 운영 지점', landmark: '랜드마크' };
         this.card().innerHTML = '<button id="mode-back">내 카페 시작 화면</button><h2>내 카페 키우기</h2><p>본점은 계속 성장하고, 공부는 매번 골라요.</p><p>지금: 카페 Lv.' + level + ' · ' + save.money.toLocaleString() + '원</p><p>다음 돈 목표: ' + (policyFor('CAFE_GROWTH').economy.cafes[level]?.expansionCost.toLocaleString() ?? '마을 투자와 자동 지점') + (level < 15 ? '원 모아 카페 확장' : '') + '</p><p>다음: ' + (next ? 'Lv.' + next[1] + ' ' + (nextName[next[0]] ?? next[0]) : '지점과 마을을 꾸준히 키워요') + '</p>' + study() + '<p id="study-progress" role="status"></p><button id="' + (ready ? 'continue-growth' : 'new-growth') + '" class="primary" data-start disabled>' + (!this.freshGrowth ? '중단한 영업 이어하기 · 종료 시각 유지' : '15분 영업 시작') + '</button><p class="hint">v2.6 전용 카페예요. 이전 버전 카페는 그대로 보관돼요.</p><div id="progressive-actions" class="progressive-grid"></div>';
         if (!ready)
@@ -283,7 +286,8 @@ export class ModeFlow {
             save = current.save;
         const changing = !this.freshGrowth && externalStudyChangeRequested(save.campaign?.run);
         const oldPool = changing ? await loadHistoricalStudy(save.campaign.run) : undefined;
-        const pool = await this.problems(changing || this.freshGrowth ? undefined : save.campaign?.run);
+        const continuing = !!save.campaign?.run?.closed && isContinuousCheckpoint(save.campaign.run.learning.session.common) && !externalStudyChangeRequested(save.campaign.run);
+        const pool = await this.problems(changing || this.freshGrowth && !continuing ? undefined : save.campaign?.run);
         if (changing && oldPool) {
             const preview = await prepareGrowthStudySwitch(save, oldPool, pool);
             const result = await preview.commit(this.repository);
@@ -341,7 +345,7 @@ export class ModeFlow {
         await this.begin(() => { const g = growthRuntime.create(save, pool, this.freshGrowth, progressiveId ?? selection?.id); if (selection) {
             alignMissionBusiness(selection.state, selection.id, progressiveId ?? selection.id);
             prepareLongState(g, selection.state);
-        } return g; }, pool, view, !!save.campaign?.run && !this.freshGrowth);
+        } return g; }, pool, view, !!save.campaign?.run && (!this.freshGrowth || save.campaign.run.closed && sameContinuousStudy(save.campaign.run.learning.session.common, pool)));
     }
     catch (error) {
         if (view === this.view)
