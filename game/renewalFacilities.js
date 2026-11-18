@@ -19,6 +19,7 @@ export function prepareRenewalDoor(source, expectedCount, wall, offset) { const 
     return fail('출입구 수가 바뀌었거나 최대 4곳이에요.'); const f = s.mega.finalGrowth.renewal.facilities ??= { version: 1, receipts: [] }, doorId = 'door-renewal-' + (1 + f.receipts.filter(r => r.kind === 'door').length); p.doors.push({ id: doorId, wall, offset }); const errors = validateMegaPlan(p); if (errors.length)
     return fail(errors[0]); s.money -= 75000; f.receipts.push({ id: 'renewal-facility-' + (f.receipts.length + 1), kind: 'door', cost: 75000, doorId }); return { ok: true, save: s }; }
 export function appendRenewalFacilities(host, repo, save, refresh) { for (const item of renewalFacilityCatalog) {
+    if(!facilityOwned(save,item.id) && (save.cafeLevel<item.level || (save.mega?.paid?.spaceLevel??1)<item.space))continue;
     const q = facilityQuote(save, item.id), card = document.createElement('article'), h = document.createElement('h3'), p = document.createElement('p'), b = document.createElement('button');
     h.textContent = item.name;
     p.textContent = 'Lv.' + item.level + ' · 실제 ' + megaDimensions[item.space - 1].join('×') + ' 매장 · ' + item.cost.toLocaleString() + '원. 기존 구역의 바닥·브랜드 마감이며, 가구·좌석은 지급하지 않아요.';

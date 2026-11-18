@@ -1,3 +1,5 @@
+import{interiorUnlockReason}from'./megaShop.js';
+import{unlocked}from'./progressiveFeatures.js';
 import { studioItem } from './renewalFurnitureCatalog.js';
 import { ensureGrowthWriteLock } from './growthWriteLock.js';
 import { validateGrowthSave } from './growthSave.js';
@@ -7,7 +9,7 @@ import { interiorCatalog, inventorySku } from './megaInventory.js';
 import { buyInterior } from './megaShop.js';
 import { kitchenStages } from './productionKitchen.js';
 const names = { stock: '메뉴 재고 보급권', furniture: '가구 20% 할인권', training: '직원 교육 20% 할인권', kitchen: '주방 20% 할인권', warehouse: '창고 20% 할인권', decoration: '미션 전용 특별 장식권' };
-export function mountRewardWallet(g, flush) { document.getElementById('renewal-reward-wallet')?.remove(); if (g.mega?.finalGrowth?.renewal?.menuPolicy !== 2 || g.mode !== 'CAFE_GROWTH')
+export function mountRewardWallet(g, flush) { document.getElementById('renewal-reward-wallet')?.remove(); if (!unlocked(g,'missions') || g.mega?.finalGrowth?.renewal?.menuPolicy !== 2 || g.mode !== 'CAFE_GROWTH')
     return; const b = document.createElement('button'); b.id = 'renewal-reward-wallet'; b.textContent = '미션·미니게임 보상함'; b.style.minHeight = '48px'; b.onclick = () => { const d = document.createElement('dialog'); d.style.cssText = 'width:min(600px,92vw);max-height:80vh;overflow:auto;background:#fff9ed'; const paint = () => { d.replaceChildren(); const h = document.createElement('h2'); h.textContent = '운영 보상 · 학습 정답과 별도'; d.append(h); const s = rewardState(g), p = document.createElement('p'); p.textContent = '현재 레벨 미니게임 성공 ' + rewardCash(g.cafeLevel, 'mini').toLocaleString() + '원부터 · 미션 ' + rewardCash(g.cafeLevel, 'mission').toLocaleString() + '원부터. 실패·건너뛰기 보상0, 한 영업 최대3도전. 같은 보상은 한 번만 받아요.'; d.append(p); for (const v of s.vouchers.filter(v => !v.used)) {
     const row = document.createElement('section'), label = document.createElement('h3');
     label.textContent = names[v.kind];
@@ -58,7 +60,7 @@ export function prepareFurnitureVoucher(source, id, sku, expectedNext) { const v
     return r; const next = r.save, inv = next.mega.inventory, receipt = inv.receipts.at(-1), paid = inv.items.find(i => i.id === receipt.items[0]); receipt.cost -= discount; paid.cost -= discount; const rewards = next.mega.finalGrowth.renewal.rewards; rewards.vouchers.find(v => v.id === id).used = true; rewards.uses.push({ id: 'reward-use-' + (rewards.uses.length + 1), voucher: id, kind: 'furniture', amount: discount, target: sku }); if (!validateGrowthSave(next))
     return { ok: false, reason: '할인 저장 검증 실패. 기존 기록은 유지돼요.' }; return { ok: true, save: next }; }
 export function rewardSetupAction(host, repo, save, refresh) { const vouchers = save.mega?.finalGrowth?.renewal?.rewards?.vouchers.filter(v => (v.kind === 'furniture' || v.kind === 'decoration') && !v.used) ?? []; if (!vouchers.length)
-    return; const button = document.createElement('button'); button.textContent = '보상함 · 가구·장식권 ' + vouchers.length + '장'; button.disabled = !!save.campaign?.run && !save.campaign.run.closed; button.onclick = () => { const d = document.createElement('dialog'); d.style.cssText = 'width:min(600px,92vw);max-height:80vh;overflow:auto'; const h = document.createElement('h2'); h.textContent = vouchers[0].kind === 'decoration' ? '미션 전용 특별 장식 · 무료로 받기' : '가구 할인권 · 1개 구매에20%'; const select = document.createElement('select'); select.setAttribute('aria-label', '할인 구매할 가구'); for (const item of interiorCatalog.filter(item => vouchers[0].kind === 'decoration' ? studioItem(item.sku)?.rewardOnly : !studioItem(item.sku)?.rewardOnly)) {
+    return; const button = document.createElement('button'); button.textContent = '보상함 · 가구·장식권 ' + vouchers.length + '장'; button.disabled = !!save.campaign?.run && !save.campaign.run.closed; button.onclick = () => { const d = document.createElement('dialog'); d.style.cssText = 'width:min(600px,92vw);max-height:80vh;overflow:auto'; const h = document.createElement('h2'); h.textContent = vouchers[0].kind === 'decoration' ? '미션 전용 특별 장식 · 무료로 받기' : '가구 할인권 · 1개 구매에20%'; const select = document.createElement('select'); select.setAttribute('aria-label', '할인 구매할 가구'); for (const item of interiorCatalog.filter(item => vouchers[0].kind === 'decoration' ? studioItem(item.sku)?.rewardOnly && save.cafeLevel>=item.level : !studioItem(item.sku)?.rewardOnly && interiorUnlockReason(save,item.sku)===null)) {
     const o = document.createElement('option');
     o.value = item.sku;
     o.textContent = item.name + (vouchers[0].kind === 'decoration' ? ' · 보상으로 받기' : ' · ' + (item.cost - Math.floor(item.cost * .2)).toLocaleString() + '원');

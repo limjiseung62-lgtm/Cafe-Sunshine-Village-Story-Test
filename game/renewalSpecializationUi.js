@@ -26,6 +26,7 @@ export function openRenewalSpecialization(g, flush, done) { const d = document.c
     if (!current) {
         const offer = finalSpecializationOffers[path];
         b.textContent = offer.name + ' · ' + offer.cost.toLocaleString() + '원 · 확인하기';
+        b.hidden = g.cafeLevel < 11 || (g.mega?.paid?.spaceLevel ?? 1) < 10;
         b.disabled = g.cafeLevel < 11 || (g.mega?.paid?.spaceLevel ?? 1) < 10 || g.money < offer.cost;
         b.onclick = () => confirm(path, offer.cost, () => chooseFinalSpecialization(g, path));
     }
@@ -34,6 +35,7 @@ export function openRenewalSpecialization(g, flush, done) { const d = document.c
         p.textContent = '현재 ' + (current.renewal?.stage ?? 1) + '단계' + (current.renewal?.legacyPriceFloor || current.renewal?.legacyProductionFloor ? ' · 기존에 얻은 보너스는 유지돼요.' : '');
         card.append(p);
         b.textContent = q.next ? '다음 ' + q.next + '단계 · ' + q.cost.toLocaleString() + '원 · Lv.' + q.level : '최종 강화 완료';
+        b.hidden = !!q.next && g.cafeLevel < q.level;
         b.disabled = !q.eligible;
         b.onclick = () => confirm(path, q.cost, () => upgradeRenewalSpecialization(g, q.current));
     }

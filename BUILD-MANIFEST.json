@@ -1,7 +1,7 @@
 {
   "version": {
-    "version": "sunshine-part1-test.4",
-    "build": "20261118-6",
+    "version": "sunshine-part1-test.5",
+    "build": "20261118-7",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -372,8 +372,8 @@
     },
     {
       "file": "bootstrap.mjs",
-      "bytes": 10157,
-      "sha256": "3d128fb800cb257936c42e3c9793e9b0260036b6115e56cd3d07dd08a44d09c1"
+      "bytes": 10992,
+      "sha256": "82b2c4503e0550d414dde2abc4d0176f9c10ca6b97275ab4787acda403c78f71"
     },
     {
       "file": "game/.gitattributes",
@@ -2726,6 +2726,11 @@
       "sha256": "cacf1102a975ead225ed1b1eaf609aaf009763f60ad3aacc5994797ebb0c7e23"
     },
     {
+      "file": "game/featureVisibility.js",
+      "bytes": 4461,
+      "sha256": "bef0752e12e8f911d700b434ca5400b1488cf5fddde47fe6159699a34499650e"
+    },
+    {
       "file": "game/feedback.css",
       "bytes": 2507,
       "sha256": "78f5ca112280840abb4de4808ee66d132c5090bcbe2103603c9fb35b5c91a130"
@@ -2752,8 +2757,8 @@
     },
     {
       "file": "game/finalDoorsUi.js",
-      "bytes": 3486,
-      "sha256": "0dbb097b9bd13a9faf51840bc46b25228c2e1fa81bba2d6d630ddc9cd92b68f7"
+      "bytes": 3543,
+      "sha256": "e7d070cc53460300a65807b2707ed05a31793f0d91ea3367f7f0ed4f0bd53c0c"
     },
     {
       "file": "game/finalGrowth.js",
@@ -3012,8 +3017,8 @@
     },
     {
       "file": "game/index.html",
-      "bytes": 1366,
-      "sha256": "35c039e10f8ff8faf328aa809aeff03e5ede13a6160f6e5fb58b273619a3330b"
+      "bytes": 3330,
+      "sha256": "93b3739c0f48ea40fd92b9c5eaf2a97d8b07b815d6ed5f543d062176747ebcdb"
     },
     {
       "file": "game/integrated.css",
@@ -3117,8 +3122,8 @@
     },
     {
       "file": "game/liveManagementUi.js",
-      "bytes": 4829,
-      "sha256": "9e613e65da2536a5ce7bbf18fdd31e47847c0a07740c8af0b667b62796053d24"
+      "bytes": 5036,
+      "sha256": "0a42568d829b96111056f6669703781604454ed6e36f2ee8e46c97f5ea907616"
     },
     {
       "file": "game/longGrowth.js",
@@ -3142,8 +3147,8 @@
     },
     {
       "file": "game/main.js",
-      "bytes": 85527,
-      "sha256": "dd383588ee10d3f1a2928268406411861c2fc9b08df92bd0063024ab4f64117a"
+      "bytes": 86062,
+      "sha256": "8845696a02da8b7d6ec7751910c61d51f576d6fe6498227f470ea5d4f2386598"
     },
     {
       "file": "game/managementAlbum.js",
@@ -3162,8 +3167,8 @@
     },
     {
       "file": "game/managementHub.js",
-      "bytes": 13067,
-      "sha256": "248f0191995100281f00346ee3bb69ec834fa7a0d6166b463f0f54541e552ae3"
+      "bytes": 13265,
+      "sha256": "716cee579ef6935ac3db3e4a801e0788846f35ef8db61ac29478a235629febd3"
     },
     {
       "file": "game/managementLive.js",
@@ -3272,8 +3277,8 @@
     },
     {
       "file": "game/megaExpansionUi.js",
-      "bytes": 10954,
-      "sha256": "10d0220943e85ad8b8d0313269084ab4bade44ab66c28151d10df9e7fc00596f"
+      "bytes": 11170,
+      "sha256": "9d264038a0a6e1c7abe41b4b06ae32665a83268de17891387c4d65a344295af9"
     },
     {
       "file": "game/megaFramePacer.js",
@@ -3428,7 +3433,7 @@
     {
       "file": "game/modeUi.js",
       "bytes": 39734,
-      "sha256": "c5a887649af8562ad8175ff74730c3d43a63b5e533e61cf95810b594c18f848a"
+      "sha256": "ba62911d54d2884b9d42b0956978191f48c3c6a4d860b6aabe7551fcd937f3bd"
     },
     {
       "file": "game/motionExpansionCatalog.js",
@@ -3542,8 +3547,8 @@
     },
     {
       "file": "game/recruitUi.js",
-      "bytes": 13307,
-      "sha256": "ec65d0245825c376680bd0c2d910e1dacfaa61acc65322952891afa55e97eb46"
+      "bytes": 13371,
+      "sha256": "3a092fff1007a3383b644f0cca168c3a29aaa496355e3f07f46db8976eb16ee8"
     },
     {
       "file": "game/renderPhaseTiming.js",
@@ -3552,8 +3557,8 @@
     },
     {
       "file": "game/renewalAppearance.js",
-      "bytes": 6975,
-      "sha256": "89976ca9e6c051029af1f23a187d50a740039db09dc94f5603375053d341a7f3"
+      "bytes": 7104,
+      "sha256": "abbd6d8f231a5a5711853b3041aac1dcd8daea533972adc25d4e2d757acce78c"
     },
     {
       "file": "game/renewalAppearanceState.js",
@@ -3567,8 +3572,8 @@
     },
     {
       "file": "game/renewalFacilities.js",
-      "bytes": 5018,
-      "sha256": "537818ea088aea7c8d27ab57ec92ceb9b97d04bf39d3737e1aed7dcffa94a2ad"
+      "bytes": 5177,
+      "sha256": "fd0364cfc100a38657221c09232163564f83178a3e9f9a4f43ef55f2f4d43041"
     },
     {
       "file": "game/renewalFacilityArt.js",
@@ -3627,8 +3632,8 @@
     },
     {
       "file": "game/renewalRewardUi.js",
-      "bytes": 10111,
-      "sha256": "e05a7e016ae7fb439c235134880efa7a9d4bbaa141912b8abe43168c47705e16"
+      "bytes": 10397,
+      "sha256": "3f1745168b2a1435e41b6a92c2fa5641481e15b02ca8bbe54588fd1745d733b9"
     },
     {
       "file": "game/renewalRosterPolicy.js",
@@ -3647,8 +3652,8 @@
     },
     {
       "file": "game/renewalSpecializationUi.js",
-      "bytes": 4956,
-      "sha256": "c27f7919d7dd3c36118dfd301123acf30ebfc955944aaf2c81679ff95d10b3b7"
+      "bytes": 5140,
+      "sha256": "4b43fe8836a511bba46a4dbafcf5e870883b72ae0e13055bd1eaf666f3b21018"
     },
     {
       "file": "game/renewalTutorialState.js",
@@ -3657,8 +3662,8 @@
     },
     {
       "file": "game/renewalTutorialUi.js",
-      "bytes": 10125,
-      "sha256": "c4ee7d95df9c2a223976337332c18581c384c4b5d20d4efef2c998ffc52c69e4"
+      "bytes": 6408,
+      "sha256": "c6614a9430261817f82846ae19d4fcb1fd099ea92711b4b28b5c67b5037dafe1"
     },
     {
       "file": "game/resultViewMemory.js",
@@ -3668,7 +3673,7 @@
     {
       "file": "game/saveRepository.js",
       "bytes": 11287,
-      "sha256": "6d4f01c06ec5177f308dca4208203bfc052f85760820dca48eacb03296b9d263"
+      "sha256": "b2c36b25c5cc3ff902041ef1dec4494607b1a0e9125ea24a380ed0b4b22d9f19"
     },
     {
       "file": "game/scienceOperational.js",
@@ -3882,13 +3887,18 @@
     },
     {
       "file": "game/touchInteriorUi.js",
-      "bytes": 27910,
-      "sha256": "11f1840923f0da8214bc241261fd58238789e69ecbf2b912cb51ec7916cd68ce"
+      "bytes": 28277,
+      "sha256": "2aa3a75e7f8bf88de34d7125adef50bdd3a66483d4905ccc8ddd99384488ecb4"
     },
     {
       "file": "game/trayGame.js",
       "bytes": 6919,
       "sha256": "b6507eeb5936834a15f935f30e638b1116d43cecb325277d5dc3895766febe92"
+    },
+    {
+      "file": "game/tutorialGuideSteps.js",
+      "bytes": 2639,
+      "sha256": "84953875bc8ffcd996978ae4924e160187beea081abc9fc320ddf1ec21e4dc6c"
     },
     {
       "file": "game/tutorialPause.js",
@@ -3923,7 +3933,7 @@
     {
       "file": "game/v30CommonEntry.js",
       "bytes": 2606,
-      "sha256": "d4d34d423fc5eb37434dce5a0a13de31ef24dee1efeed9b4646e5e30c8cc6587"
+      "sha256": "3d6ea93f40dc71b0621c18c76a541921076a3589d751291550a9e8c8dfa532ef"
     },
     {
       "file": "game/version.json",
@@ -4023,12 +4033,12 @@
     {
       "file": "game-bootstrap.mjs",
       "bytes": 838,
-      "sha256": "e37f5c0f1ff932cbe426bd7140be06ca43ede9dd8e7c7f10f5728609a3483556"
+      "sha256": "28059ed6506eb07cf8a69b02e6b0b38dafb57ab8e7d9b9ab9a5a870e92caef8b"
     },
     {
       "file": "index.html",
       "bytes": 4975,
-      "sha256": "790a6164ce139cf7fd8621bd811c549f1bee9fc8c2ee3964c493a07283d02da8"
+      "sha256": "283e9bf0fcf388ffd072b38a32e74fa3f89cf40eee997ba95016c198f27a4b75"
     },
     {
       "file": "MOBILE_STORAGE_ARCHITECTURE.md",
@@ -4043,7 +4053,7 @@
     {
       "file": "README.md",
       "bytes": 1236,
-      "sha256": "6c6a76f7bcdf09fe7e132ccf577d828a69f08f8e443cfcd5efe96d5654d57275"
+      "sha256": "996c3625ca8a28dd9b78aa683a5330eaaf7c28da698ad14a0cd74cb195e4b68b"
     },
     {
       "file": "src/ending-stage.mjs",
@@ -4122,8 +4132,13 @@
     },
     {
       "file": "src/story-ui.mjs",
-      "bytes": 31808,
-      "sha256": "94f5ee2ba2c67505e561745d473ccc4c0b0685c924627757e72ae12baf6a4327"
+      "bytes": 31879,
+      "sha256": "a1a9b169383a5945db8aec8586df851fc9c4a8f84d11f638e6395f704860f1e2"
+    },
+    {
+      "file": "start-over.mjs",
+      "bytes": 4981,
+      "sha256": "bf97a57d29612c554e11fbd73ca3475a5ada4b5a4743983da2e7f034ffadcf1b"
     },
     {
       "file": "storage-codec.mjs",
@@ -4133,7 +4148,7 @@
     {
       "file": "storage-engine.mjs",
       "bytes": 9685,
-      "sha256": "1db856ec69ce4870528e028cf33cd43bd80b85ab7abebf6cf5bc4d6d1553194f"
+      "sha256": "49d18b5dd88aae066ab6703ff8793adc0d0f3b61db7796030168c64a3074c2b3"
     },
     {
       "file": "storage-errors.mjs",
@@ -4143,7 +4158,7 @@
     {
       "file": "storage-init.mjs",
       "bytes": 7013,
-      "sha256": "4498b24d0d5ae6b5a404cd777895d44c6dbfed2ce2e65271749cb07d9155bb3c"
+      "sha256": "f31ceb63e850671aff0991f72a888b75bf44462d67e4abc0f8ff0ee8b5279b03"
     },
     {
       "file": "STORAGE-LICENSES.md",
@@ -4178,17 +4193,29 @@
     {
       "file": "version.json",
       "bytes": 402,
-      "sha256": "c2c631988c3a7c3ccc436168b5a9572c051533fdb4992af73492c61271d0b90b"
+      "sha256": "dd0bd259737003cebee9de0f02a88fc5360b0c685ec71e9bfb04284535eaa0f4"
     }
   ],
   "changed": [
     "bootstrap.mjs",
+    "game/featureVisibility.js",
+    "game/finalDoorsUi.js",
     "game/index.html",
+    "game/liveManagementUi.js",
     "game/main.js",
+    "game/managementHub.js",
+    "game/megaExpansionUi.js",
     "game/modeUi.js",
+    "game/recruitUi.js",
+    "game/renewalAppearance.js",
+    "game/renewalFacilities.js",
+    "game/renewalRewardUi.js",
+    "game/renewalSpecializationUi.js",
     "game/renewalTutorialState.js",
     "game/renewalTutorialUi.js",
     "game/saveRepository.js",
+    "game/touchInteriorUi.js",
+    "game/tutorialGuideSteps.js",
     "game/v30CommonEntry.js",
     "game-bootstrap.mjs",
     "index.html",
@@ -4196,6 +4223,7 @@
     "native-backup-bridge.mjs",
     "README.md",
     "src/story-ui.mjs",
+    "start-over.mjs",
     "storage-engine.mjs",
     "storage-errors.mjs",
     "storage-init.mjs",
@@ -4203,6 +4231,6 @@
     "version.json"
   ],
   "protectedFiles": 136,
-  "syntaxModules": 358,
+  "syntaxModules": 361,
   "studentDataIncluded": false
 }

@@ -1,5 +1,6 @@
+import{pollFeatureNotices}from'./featureVisibility.js';
 import { recoverInteriorEditing } from './interiorPause.js';
-import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261118-6';
+import { beginRenewalTutorials, pollRenewalTutorials } from './renewalTutorialUi.js?v=20261118-7';
 import { finalizeExternal, observeExternalGame } from './externalLaunch.js';
 import { releaseResultView } from './resultViewMemory.js';
 import { kitchenRequiredSpace, kitchenStages, kitchenFloorLabel } from './productionKitchen.js';
@@ -52,7 +53,7 @@ import { installAssetFallbacks } from './assetFallback.js';
 import { createLearning } from './learningIntegration.js';
 import { renderQuestionText, escapeText, renderDiagram } from './questionRenderer.js';
 import { GameFeel } from './gameFeel.js';
-import { ModeFlow } from './modeUi.js?storageBuild=20261118-6';
+import { ModeFlow } from './modeUi.js?storageBuild=20261118-7';
 import { itemCatalog, specialNames, specialIcons } from './phase4Config.js';
 import { showOrderBubble, syncOrderBubble, assetSignature } from './presentation.js';
 import { personalityLabels } from './customerRules.js';
@@ -380,8 +381,8 @@ export function render() {
     ux.poll(game);
 }
 let nextRender = 0, nextActors = 0;
-function frame(now) {if(globalThis.__SUNSHINE_STORAGE_BLOCKED){requestAnimationFrame(frame);return;} if (game && !commonBusy && !liveManagementOpen)
-    pollRenewalTutorials(game); if (game?.tutorialPause?.active) {
+function frame(now) {if(globalThis.__SUNSHINE_STORAGE_BLOCKED){requestAnimationFrame(frame);return;} if (game && !commonBusy && !liveManagementOpen) {
+    pollFeatureNotices(game); pollRenewalTutorials(game); } if (game?.tutorialPause?.active) {
     requestAnimationFrame(frame);
     return;
 } if (game && !commonBusy && !liveManagementOpen)
@@ -632,6 +633,7 @@ function renderInvestment(force = false) {
     panel.hidden = !investmentOpen || !game || game.status !== 'RUNNING';
     if (panel.hidden || !game)
         return;
+    if(investmentTab==='staff' && !unlocked(game,'recruitment')) investmentTab='cafe';
     const key = JSON.stringify([investmentTab, game.money, game.cafeLevel, game.warehouseLevel, game.mega?.production, game.menus.map(m => [m.stock, m.currentLevel]), game.service.paid.map(w => w.level), game.itemPurchases, game.goldenRemaining, game.boosterRemaining, game.vipPending, investmentMessage, purchaseGate.blocked, performance.now() < celebrationUntil]);
     if (!force && key === renderedInvestmentKey)
         return;
@@ -684,7 +686,7 @@ function renderInvestment(force = false) {
         el('close-invest').onclick = closeInvestment;
         el('return-invest').onclick = closeInvestment;
     }
-    body.innerHTML = '<p class="investment-money">보유금 ' + game.money.toLocaleString() + '원 · 총매출 ' + game.stats.revenue.toLocaleString() + '원</p><div class="investment-tabs" role="tablist">' + [['cafe', '카페 확장'], ['warehouse', '창고'], ['menu', '메뉴 강화'], ['staff', '직원'], ...(game.phase4Enabled && !game.progressive ? [['items', '아이템']] : [])].map(([id, title]) => '<button role="tab" aria-selected="' + (id === investmentTab) + '" data-tab="' + id + '">' + title + '</button>').join('') + '</div><p class="investment-message" aria-live="polite">' + investmentMessage + '</p><div class="investment-content">' + content + '</div>';
+    body.innerHTML = '<p class="investment-money">보유금 ' + game.money.toLocaleString() + '원 · 총매출 ' + game.stats.revenue.toLocaleString() + '원</p><div class="investment-tabs" role="tablist">' + [['cafe', '카페 확장'], ['warehouse', '창고'], ['menu', '메뉴 강화'], ...(unlocked(game, 'recruitment') ? [['staff', '직원']] : []), ...(game.phase4Enabled && !game.progressive ? [['items', '아이템']] : [])].map(([id, title]) => '<button role="tab" aria-selected="' + (id === investmentTab) + '" data-tab="' + id + '">' + title + '</button>').join('') + '</div><p class="investment-message" aria-live="polite">' + investmentMessage + '</p><div class="investment-content">' + content + '</div>';
     panel.querySelector('.investment-content').scrollTop = scroll;
     const delivery = panel.querySelector('#delivery-menu');
     if (delivery)
@@ -693,6 +695,7 @@ function renderInvestment(force = false) {
         return; const menu = panel.querySelector('#delivery-menu')?.value; const result = game.buyItem(b.dataset.item, b.dataset.item === 'delivery' ? menu : undefined); investmentMessage = result.reason.replace(/Cafe Lv\.(\d+)/g, '카페 $1단계'); render(); });
     panel.querySelectorAll('[data-buy],[data-item]').forEach(b => { if (purchaseGate.blocked || b.closest('article,.investment-card')?.querySelector('.afford.insufficient') || (b.dataset.buy === 'cafe' && performance.now() < celebrationUntil))
         b.disabled = true; });
+    panel.querySelector('[data-buy=production]')?.toggleAttribute('hidden', !!(game.mega?.paid && kitchenStages[(game.mega.production?.tier??0)+1] && (game.cafeLevel<kitchenStages[(game.mega.production?.tier??0)+1].level || game.mega.paid.spaceLevel<kitchenRequiredSpace(game,(game.mega.production?.tier??0)+1))));
     panel.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { investmentTab = b.dataset.tab; investmentMessage = ''; renderInvestment(true); panel.querySelector('.investment-content').scrollTop = 0; });
     panel.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { advanceTime(); if (!game || game.status !== 'RUNNING' || !purchaseGate.run(() => { }))
         return; const kind = b.dataset.buy; if (kind === 'cafe' && performance.now() < celebrationUntil)

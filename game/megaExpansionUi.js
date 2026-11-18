@@ -12,6 +12,8 @@ import { ensureMegaPlan, megaDimensions, megaChairs, iso } from './megaSpace.js'
 export function expansionAction(container, repo, source, refresh) {
     if (!source.mega || !document.querySelector('meta[name="cafe-deployment"]')?.getAttribute('content')?.match(/^v30[cde]-/))
         return;
+    const nextStage=expansionQuote(source).next;
+    if(!nextStage || source.cafeLevel<nextStage.requiredLevel)return;
     const button = document.createElement('button');
     button.textContent = '매장 증축 · 면적과 비용 비교';
     button.className = 'mega-expansion-entry';

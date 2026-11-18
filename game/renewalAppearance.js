@@ -33,7 +33,7 @@ export async function openAppearance(repo, done = () => { }) { if (document.quer
     b.setAttribute('aria-pressed', String(slot === key));
     b.onclick = () => { slot = key; pending = ''; render(); };
     tabs.append(b);
-} dialog.append(tabs); const cards = document.createElement('div'); cards.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px'; for (const item of appearanceCatalog.filter(x => x.slot === slot)) {
+} dialog.append(tabs); const cards = document.createElement('div'); cards.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px'; for (const item of appearanceCatalog.filter(x => x.slot === slot && (s.cafeLevel >= x.level || a.owned.includes(x.id)))) {
     const q = appearanceQuote(s, item.id), card = document.createElement('article');
     card.style.cssText = 'padding:12px;border:1px solid #c2b38c;border-radius:12px';
     const img = document.createElement('div');
