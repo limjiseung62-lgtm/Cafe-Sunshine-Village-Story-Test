@@ -1,3 +1,4 @@
+import{storageFailure}from'../storage-errors.mjs';
 import { externalStudyChangeRequested, loadHistoricalStudy } from './externalLaunch.js';
 import { prepareGrowthStudySwitch } from './growthStudySwitch.js';
 import { mountRecoveryStart, mountBackupControls, mountPlayingBackup, mountEndBackup } from './backupRecoveryUi.js';
@@ -29,7 +30,7 @@ import { chooseLongMission, prepareLongState } from './longGrowthUi.js';
 import { growthRuntime } from './growthRuntime.js';
 import { createGrowthSave } from './growthSave.js';
 import { GrowthSessionController } from './growthSession.js';
-import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js';
+import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261118-4';
 import { policyFor } from './sessionModes.js';
 import { questionCatalog } from './questionPack.js';
 import { escapeText } from './questionRenderer.js';
@@ -148,7 +149,7 @@ export class ModeFlow {
         this.packError();
     } if (view === this.view)
         e('pack-retry').onclick = () => { void this.populatePacks(true); }; }
-    packError(error) { this.loadFailed = true; this.controls(true); const message = error instanceof Error ? error.message : ''; e('pack-error').textContent = /직원|손님|카페 상태|학습 기록 복원|공통 학습 백업/.test(message) ? '이어하기 정보를 복원하지 못했어요. 카페를 초기화하지 말고 JSON 백업을 보관해 주세요. · ' + message : '문제를 불러오지 못했어요. 기존 저장은 유지돼요. 연결을 확인하고 다시 시도해 주세요.'; e('pack-retry').hidden = false; }
+    packError(error) { this.loadFailed = true; this.controls(true); const message = error instanceof Error ? error.message : ''; e('pack-error').textContent = /STORAGE_/.test(message)?message:/직원|손님|카페 상태|학습 기록 복원|공통 학습 백업/.test(message) ? '이어하기 정보를 복원하지 못했어요. 카페를 초기화하지 말고 JSON 백업을 보관해 주세요. · ' + message : '문제를 불러오지 못했어요. 기존 저장은 유지돼요. 연결을 확인하고 다시 시도해 주세요.'; e('pack-retry').hidden = false; }
     async problems(resume) { await preflightExternal(resume); questionCatalog.prepareResume(resume); const id = e('study-pack').value; if (!id || !(await questionCatalog.selectable(this.card().querySelector('#continue-growth,#new-growth,#reset-growth') || v26Deployment() ? 'growth' : undefined)).some(p => p.packId === id))
         throw Error('inactive pack'); return (await questionCatalog.load(id)).questions; }
     async begin(factory, pool, view, resuming = false) { return runExternalStart(resuming, async () => { if (!resuming)
@@ -356,7 +357,7 @@ export class ModeFlow {
         return; const dialog = document.createElement('section'); dialog.id = 'mode-confirm'; dialog.className = 'mode-confirm'; dialog.setAttribute('role', 'dialog'); dialog.setAttribute('aria-modal', 'true'); dialog.setAttribute('aria-label', '카페 확인'); dialog.innerHTML = '<div><h2>한 번 더 확인해요</h2><p>' + message + '</p><button id="confirm-cancel" class="secondary">취소</button><button id="confirm-yes" class="primary">확인하고 진행</button></div>'; document.body.append(dialog); e('confirm-cancel').onclick = () => dialog.remove(); e('confirm-yes').onclick = () => { if (!dialog.isConnected)
         return; dialog.remove(); action(); }; e('confirm-cancel').focus(); }
     attach(game, pool) { if (game.mode !== 'CAFE_GROWTH')
-        throw Error('내 카페 모드만 지원해요.'); this.pool = pool; this.endedGame = null; this.controller = new GrowthSessionController(game, this.repository, undefined, (save, base) => growthRuntime.enrich(save, base)); mountLiveManagement(game, this.controller); mountPlayingBackup(this.repository, () => commonTransactionOpen ? { ok: false, message: '학습 응답 저장을 마친 뒤 백업해 주세요.' } : this.controller.save()); this.feedback(this.controller.save()); e('mode-label').textContent = '내 카페 키우기'; e('end-business').hidden = false; e('end-business').textContent = '영업 마치기'; e('end-business').onclick = () => this.confirm('지금 영업을 마치고 카페를 저장할까요?', () => { game.endBusiness(); this.endView(); this.refresh(game); }); e('leave-game').textContent = '저장하고 나가기'; e('leave-game').onclick = () => this.confirm('현재 카페를 저장하고 나갈까요?', () => { if (game.status !== 'RUNNING')
+        throw Error('내 카페 모드만 지원해요.'); this.pool = pool; this.endedGame = null; this.controller = new GrowthSessionController(game, this.repository, undefined, (save, base) => growthRuntime.enrich(save, base)); mountLiveManagement(game, this.controller); mountPlayingBackup(this.repository, () => commonTransactionOpen ? { ok: false, message: '학습 응답 저장을 마친 뒤 백업해 주세요.' } : this.controller.save()); let initial;try{initial=this.controller.save()}catch(error){initial=storageFailure(error)}if(!initial.ok){this.controller=null;throw Error(initial.message)}this.feedback(initial); e('mode-label').textContent = '내 카페 키우기'; e('end-business').hidden = false; e('end-business').textContent = '영업 마치기'; e('end-business').onclick = () => this.confirm('지금 영업을 마치고 카페를 저장할까요?', () => { game.endBusiness(); this.endView(); this.refresh(game); }); e('leave-game').textContent = '저장하고 나가기'; e('leave-game').onclick = () => this.confirm('현재 카페를 저장하고 나갈까요?', () => { if (game.status !== 'RUNNING')
         return; this.flush(); if (this.controller.lastResult.ok)
         location.reload(); }); }
     feedback(result) { e('save-status').textContent = result.ok ? '저장 완료 ✓' : result.message || '카페 저장에 문제가 생겼어요.'; e('save-status').className = result.ok ? 'save-ok' : 'save-error'; this.savedUntil = result.ok ? performance.now() + 2200 : Infinity; if (result.ok) {

@@ -1,3 +1,4 @@
+import{storageFailure}from'../storage-errors.mjs';
 import { hasGrowthWriteLock, supportsGrowthLock } from './growthWriteLock.js';
 import { validateGrowthSave, migrateGrowthSave } from './growthSave.js';
 export const growthStorageKey = 'cafe-learning-tycoon.growth.v1';
@@ -132,11 +133,11 @@ export class LocalSaveRepository {
             this.storage.setItem(this.key + '.before-mini-v1', current);
         if (save.village && current !== null && !this.storage.getItem(this.key + '.before-village-v1'))
             this.storage.setItem(this.key + '.before-village-v1', current);
-        this.storage.setItem(this.key, JSON.stringify(save));
+        const serialized=JSON.stringify(save);this.storage.setItem(this.key,serialized);if(this.storage.getItem(this.key)!==serialized){const error=Error('저장 후 읽기 확인 실패');error.code='SUNSHINE_SAVE_READBACK';throw error;}
         return { ok: true, message: '저장됨 ✓' };
     }
-    catch {
-        return { ok: false, message: '저장할 수 없습니다. 브라우저 저장 공간을 확인해 주세요.' };
+    catch(error) {
+        return storageFailure(error);
     } }
     replace(save, confirmed) {
         if (!confirmed)

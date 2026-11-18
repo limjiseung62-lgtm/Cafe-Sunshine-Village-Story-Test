@@ -349,7 +349,7 @@ export class MegaView {
                     if (seatTable)
                         paintEatingMotion(c, q, seatTable, guest.elapsed, guest.id, reduce);
                     const t = p.tables.find(t => t.id === s.space.seats[guest.seat].tableId);
-                    const m = iso(t, 24), food = image(signatureImage(guest.order.map(o => o.menuId).find(id => !!signatureImage(id)) ?? '') ?? 'assets/art/hospitality/signature.svg');
+                    const m = iso(t, 24), food = image(signatureImage(guest.order.map(o => o.menuId).find(id => !!signatureImage(id)) ?? '') ?? 'assets/web/art/hospitality/signature-plate.webp');
                     if (food)
                         c.drawImage(food, m.x - 5, m.y - 6, 10, 10);
                     else {
@@ -479,3 +479,4 @@ export class MegaView {
     } this.host?.remove(); this.host = null; this.canvas = null; this.room = null; this.game = null; this.scene = null; this.intervals = []; this.cpu = []; this.last = 0; this.lastStats = 0; this.level = 0; this.floorKey = ''; }
 }
 export const megaView = new MegaView();
+

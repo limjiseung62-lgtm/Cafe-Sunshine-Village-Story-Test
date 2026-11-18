@@ -1,7 +1,7 @@
 {
   "version": {
-    "version": "sunshine-part1-test.1",
-    "build": "20261118-3",
+    "version": "sunshine-part1-test.2",
+    "build": "20261118-4",
     "cafeVersion": "3.2.0-growth-only-rc.1",
     "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
     "storyCommit": "aaec997",
@@ -363,8 +363,8 @@
     },
     {
       "file": "bootstrap.mjs",
-      "bytes": 8774,
-      "sha256": "cd3f78e7569bb4ef3b8a82a517fa9e1c6bd33a395697b6763fb94701f0f2f23d"
+      "bytes": 9120,
+      "sha256": "25fda7d94c33fdfe69910ab182c3b208cdfeda7800406c80686771e0de196e5b"
     },
     {
       "file": "game/.gitattributes",
@@ -3003,8 +3003,8 @@
     },
     {
       "file": "game/index.html",
-      "bytes": 1353,
-      "sha256": "4a754c706f191ced54d31781bbe5304d7766e5ae2a443a878efd74d509092bfe"
+      "bytes": 1366,
+      "sha256": "497d6b757addc2df66d22dad81a50a3df618ee6d28e7d650a20eff5c77b2c61f"
     },
     {
       "file": "game/integrated.css",
@@ -3133,8 +3133,8 @@
     },
     {
       "file": "game/main.js",
-      "bytes": 84311,
-      "sha256": "7b637cf1e81a020569f68ccb32b56bf1eb53b939d840559b7fcc989f86ef1811"
+      "bytes": 84441,
+      "sha256": "7e358419b8f1ef062f8b152b57a67bd41c0ad5ba844d0c8fd61c9c96687687a0"
     },
     {
       "file": "game/managementAlbum.js",
@@ -3343,8 +3343,8 @@
     },
     {
       "file": "game/megaView.js",
-      "bytes": 36533,
-      "sha256": "b81a693bdb5d320447f73f6514219086b887b8595850c6945585be8711e33ae6"
+      "bytes": 36545,
+      "sha256": "71b3d743bc9da48cbd1421d9e5a9fa7a99251b5843ff784d2d18aa99de53bfb0"
     },
     {
       "file": "game/megaZones.js",
@@ -3418,8 +3418,8 @@
     },
     {
       "file": "game/modeUi.js",
-      "bytes": 38726,
-      "sha256": "c73520e25ff6c586561e581ea5cf5ea0cf24e5697fc8cc6a0223c4da9da1b889"
+      "bytes": 38975,
+      "sha256": "e0d8ab9e80567c31c6d928fd904042d2b48df4f0573c9c7e005839f543da228b"
     },
     {
       "file": "game/motionExpansionCatalog.js",
@@ -3658,8 +3658,8 @@
     },
     {
       "file": "game/saveRepository.js",
-      "bytes": 10928,
-      "sha256": "c1afa725083a1da56f6620dcb84fae16beb6a46b19749958531b32cdcfc2e0a1"
+      "bytes": 11080,
+      "sha256": "bc43761fa59e69bf3fbe5e15cc724027139a9c1b68d34083a855a102f109b9a1"
     },
     {
       "file": "game/scienceOperational.js",
@@ -3913,8 +3913,8 @@
     },
     {
       "file": "game/v30CommonEntry.js",
-      "bytes": 2541,
-      "sha256": "433ffc73a8f7e47c17ac22d80cb11e19264e5cde7dbf5a302ce0b3f939c0cc75"
+      "bytes": 2565,
+      "sha256": "da6ba1dbc2ef736300b0b1d9b8661688bd9a6026837f384cd7d7e8bb35db2edc"
     },
     {
       "file": "game/version.json",
@@ -4013,13 +4013,13 @@
     },
     {
       "file": "game-bootstrap.mjs",
-      "bytes": 522,
-      "sha256": "16245beefc502693b849e162a348299e398e7a01744f8df58b667ebadf5e92aa"
+      "bytes": 746,
+      "sha256": "2912b7e546aaf2f99bdf0fa0afb50195203f68fe74e3875298ea974e594d2e10"
     },
     {
       "file": "index.html",
-      "bytes": 4962,
-      "sha256": "b497898a20df24e15e864f9a08d7b23a4d82cced188070f01e073e238dbe2cff"
+      "bytes": 4975,
+      "sha256": "d5ae4cf63c01490978a0280c9d78005efee2ca7c62059d980c39781605b07a76"
     },
     {
       "file": "native-backup-bridge.mjs",
@@ -4107,9 +4107,24 @@
       "sha256": "a2d7c4eb1255b5f88d24f46cbd0b6c731f1364ac20db395f1b6d14b6b221e25c"
     },
     {
+      "file": "storage-codec.mjs",
+      "bytes": 2136,
+      "sha256": "7110c5d8f93f34e2f35b1f40cdfec9118b4d5f1eae7db67261da782fd6db65b0"
+    },
+    {
+      "file": "storage-errors.mjs",
+      "bytes": 1712,
+      "sha256": "1288047d74eb039bc33ff071badb619ecdd725e8111dc233fa7edeb51ee940ce"
+    },
+    {
       "file": "storage-init.mjs",
-      "bytes": 2802,
-      "sha256": "81b324dce6079edc69d495d4ff0d224ecbbb72dd214ce580f58a49b6d1d83197"
+      "bytes": 3915,
+      "sha256": "0c47fc289be372b5b90e9ac6d62f43fcd92740c8fb2f38e1950266f46671974d"
+    },
+    {
+      "file": "STORAGE-LICENSES.md",
+      "bytes": 282,
+      "sha256": "1ed968796fa30e476b66be3543d1e11bbc199f58bf1c56014fd996dfc1434f3a"
     },
     {
       "file": "story.css",
@@ -4122,16 +4137,36 @@
       "sha256": "0d5f1f3f90e2189d991afbed50f69e30d01d45bf3e3090a0051942f0ddd1eae1"
     },
     {
+      "file": "vendor/pako-1.0.11.min.js",
+      "bytes": 45988,
+      "sha256": "29cfa0542b9864b6640cfdcc8f15b184db6431b532db2702a3ce97e5f2a7fc1c"
+    },
+    {
+      "file": "vendor/PAKO-LICENSE.txt",
+      "bytes": 1104,
+      "sha256": "a04665b3b2de56c66730c1f720f528175739e4104f79073614aa611da1e85539"
+    },
+    {
+      "file": "vendor/ZLIB-LICENSE.txt",
+      "bytes": 980,
+      "sha256": "61b080e6c995289183ac15df83d504eedb91c40d060f33a2d0e3c5234651e3b5"
+    },
+    {
       "file": "version.json",
       "bytes": 326,
-      "sha256": "bfd43eedd9a0b32f3b3e628b9664cfbd282cfb505707d9894d4f0588796d2a54"
+      "sha256": "99e3fa0edecd41c277deec2ca8eb03066c104b311c2d5fabfe97e1704b49e033"
     }
   ],
   "nativeChanged": [
     "backupRecoveryUi.js",
-    "index.html"
+    "index.html",
+    "main.js",
+    "megaView.js",
+    "modeUi.js",
+    "saveRepository.js",
+    "v30CommonEntry.js"
   ],
   "protectedFiles": 136,
-  "syntaxModules": 354,
+  "syntaxModules": 357,
   "studentDataIncluded": false
 }
