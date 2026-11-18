@@ -1,4 +1,4 @@
-import{storageFailure}from'../storage-errors.mjs?v=20261118-5';
+import{storageFailure}from'../storage-errors.mjs?v=20261118-6';
 import { externalStudyChangeRequested, loadHistoricalStudy } from './externalLaunch.js';
 import { prepareGrowthStudySwitch } from './growthStudySwitch.js';
 import { mountRecoveryStart, mountBackupControls, mountPlayingBackup, mountEndBackup } from './backupRecoveryUi.js';
@@ -30,7 +30,7 @@ import { chooseLongMission, prepareLongState } from './longGrowthUi.js';
 import { growthRuntime } from './growthRuntime.js';
 import { createGrowthSave } from './growthSave.js';
 import { GrowthSessionController } from './growthSession.js';
-import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261118-5';
+import { LocalSaveRepository, BrowserGrowthRepository, CandidateSaveRepository, growthStorageKey } from './saveRepository.js?storageBuild=20261118-6';
 import { policyFor } from './sessionModes.js';
 import { questionCatalog } from './questionPack.js';
 import { escapeText } from './questionRenderer.js';

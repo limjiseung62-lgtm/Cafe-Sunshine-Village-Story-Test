@@ -2,9 +2,8 @@ import { mountRewardWallet } from './renewalRewardUi.js';
 import { MegaView } from './megaView.js';
 import { SpatialScene } from './spatial.js';
 import { newTutorialPause, beginTutorialPause, endTutorialPause } from './tutorialPause.js';
-import { newRenewalTutorials, pendingTutorials, tutorialLevels, tutorialTitles } from './renewalTutorialState.js';
+import { newRenewalTutorials, pendingTutorials, tutorialLevels, tutorialTitles } from './renewalTutorialState.js?v=20261118-6';
 import { RenewalPractice } from './renewalPractice.js';
-import { commonQuestion } from './commonLearningCatalog.js';
 import { activeMini } from './miniGames.js';
 let current, flush = () => false, practiceFlow, dialog, disposePractice;
 function progress(g) { if (g.mega?.finalGrowth?.renewal)
@@ -73,6 +72,24 @@ async function open(g, level) {
         status.textContent = '튜토리얼 일시정지를 저장하지 못했어요. 저장 공간을 확인해 주세요.';
         return;
     }
+    if (level === 1) {
+        h.textContent = '카페 영업 안내';
+        frozen.textContent = '영업 시간이 잠시 멈췄어요. 안내를 확인한 뒤 카페에서 시작해 보세요.';
+        const instructions = document.createElement('p');
+        instructions.id = 'first-cafe-guide';
+        instructions.style.cssText = 'font-size:20px;line-height:1.7;padding:16px';
+        instructions.textContent = '먼저 음식 만들기 탭을 눌러서 음식을 만들어요.';
+        area.append(instructions);
+        done.textContent = '다음';
+        done.disabled = false;
+        done.onclick = () => {
+            instructions.textContent = '그다음 서빙하기 버튼을 눌러서 손님에게 전달해요!';
+            done.textContent = '안내 완료 · 카페로 돌아가기';
+            done.onclick = () => finish('complete');
+        };
+        skip.textContent = '안내 건너뛰기';
+        return;
+    }
     try {
         const model = new RenewalPractice(level), preview = document.createElement('div');
         preview.style.cssText = 'width:100%;height:260px;min-width:0;position:relative;overflow:hidden;border-radius:14px;background:#eee5d0';
@@ -84,50 +101,6 @@ async function open(g, level) {
         const timer = setInterval(() => { if (!document.hidden)
             paint(); }, 150);
         disposePractice = () => { clearInterval(timer); view.detach(); };
-        if (level === 1) {
-            if (!practiceFlow) {
-                status.textContent = '승인 문제은행을 연결한 학습에서 문제풀이 체험을 할 수 있어요. 임의 문제로 바꾸지 않아요.';
-                return;
-            }
-            const flow = practiceFlow();
-            const next = await flow.next();
-            if (next.status !== 'question') {
-                status.textContent = '선택 범위의 연습 문항을 준비하지 못했어요. 실제 기록은 그대로예요.';
-                return;
-            }
-            const q = commonQuestion(next.question, 'tutorial', flow.choices, flow.loaded.subject, flow.choices[0].unitLabel), text = document.createElement('p');
-            text.textContent = q.question;
-            area.append(text);
-            if (q.diagram) {
-                const img = document.createElement('img');
-                img.alt = '승인 문항 그림';
-                img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(q.diagram);
-                img.style.cssText = 'width:100%;max-height:min(240px,30vh);object-fit:contain';
-                area.append(img);
-            }
-            let answered = false;
-            for (let i = 0; i < q.choices.length; i++) {
-                const b = document.createElement('button');
-                b.textContent = q.choices[i];
-                b.style.cssText = 'min-height:48px;margin:5px';
-                b.onclick = async () => { if (answered)
-                    return; answered = true; const result = await flow.answer(q.choiceIds[i], 0); if (result.status !== 'correct') {
-                    status.textContent = '연습 오답이에요. ' + q.explanation + ' 실제 오답노트에는 남지 않아요.';
-                    const retry = document.createElement('button');
-                    retry.textContent = '해설 확인 · 생산과 서빙 연습';
-                    retry.onclick = () => serve();
-                    area.append(retry);
-                }
-                else
-                    serve(); };
-                area.append(b);
-            }
-            const serve = () => { area.replaceChildren(preview); model.game.recordAnswer(true, 1, 1); model.game.tick(6); status.textContent = '연습 정답으로 메뉴별 ' + model.game.productionAmount + '개 생산했어요. ' + q.explanation; const b = document.createElement('button'); b.textContent = '연습 손님 주문 · 서빙해 보기'; b.onclick = () => { for (let i = 0; i < 600 && model.game.stats.servedCustomers < 1; i++) {
-                model.game.tick(.2);
-                model.game.serveReadyOrder();
-            } status.textContent = '실제 연습 시뮬레이션 · 서빙 ' + model.game.stats.servedCustomers + '건 · 재고 ' + model.game.menus.map(m => m.stock).join(',') + '개 · 실제 카페 보상 없음'; done.disabled = model.game.stats.servedCustomers < 1; }; area.append(b); };
-            return;
-        }
         const summary = document.createElement('p');
         summary.textContent = model.summary();
         area.append(summary);
