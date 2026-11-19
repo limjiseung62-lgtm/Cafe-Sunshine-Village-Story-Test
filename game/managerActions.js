@@ -16,6 +16,26 @@ const zoneLabel = (g, id) => g.serviceSpace?.megaPlan ? megaZones(g.serviceSpace
 const serial = (g) => g.mega?.finalGrowth?.managerActions?.serial ?? 0;
 export function managerFingerprint(g) { const m = g.mega; return JSON.stringify([g.cafeLevel, m?.paid, m?.inventory, m?.plans, m?.production, m?.finalGrowth?.specialization, g.roster?.owned, g.roster?.active, m?.finalGrowth?.crew, m?.manager?.selected, serial(g)]); }
 export function managerAvailable(g) { return g.mode === 'CAFE_GROWTH' && !!g.mega?.finalGrowth && g.mega.manager?.status === 'selected' && (g.mega.paid?.spaceLevel ?? 1) > 1; }
+export function managerTaskAvailability(g, kind) {
+    if (!managerAvailable(g)) return { visible: false, enabled: false, reason: '첫 유료 증축 후 매니저를 선택해 주세요.' };
+    const renewal = g.mega?.finalGrowth?.renewal, fresh = !!renewal && renewal.origin !== 'legacy';
+    const level = { roles: 14, training: 9, logistics: 13 }[kind];
+    if (fresh && level && g.cafeLevel < level) return { visible: false, enabled: false, reason: 'Lv.' + level + '에 열려요.' };
+    if (g.status !== 'RUNNING') return { visible: true, enabled: false, reason: '영업을 시작한 뒤 사용할 수 있어요.' };
+    if (['roles', 'training'].includes(kind) && !g.service.paid.length) return { visible: true, enabled: false, reason: '직원을 먼저 채용해 주세요.' };
+    if (kind === 'roles' && g.service.paid.every(w => crewAssignment(g,w.staffId).locked)) return { visible: true, enabled: false, reason: '직원 배치가 모두 잠겨 있어요. 직접 설정에서 잠금을 확인해 주세요.' };
+    if (kind === 'training' && g.service.paid.every(w => w.level >= 5)) return { visible: true, enabled: false, reason: '모든 직원이 최고 교육 단계예요.' };
+    if (kind === 'training' && g.service.paid.filter(w=>w.level<5).every(w=>g.money < (g.getStaffUpgradeCost(w.staffId)??Infinity))) return { visible:true, enabled:false, reason:'직원 교육 비용이 부족해요.' };
+    if (kind === 'hire' && g.service.paid.length >= g.staffLimit) return { visible: true, enabled: false, reason: '현재 직원 정원이 가득 찼어요.' };
+    if (kind === 'kitchen') { const tier=(g.mega.production?.tier??0)+1,next=kitchenStages[tier];
+        if (!next) return { visible: true, enabled: false, reason: '주방이 최고 단계예요.' };
+        if (g.cafeLevel < next.level || (g.mega.paid?.spaceLevel??1) < kitchenRequiredSpace(g,tier)) return { visible: false, enabled: false, reason: '다음 주방의 레벨·증축 조건이 아직 열리지 않았어요.' };
+        if (g.money < next.cost) return { visible:true, enabled:false, reason:'주방 강화 비용이 ' + (next.cost-g.money).toLocaleString() + '원 부족해요.' };
+    }
+    if (kind === 'storage' && g.nextWarehouse && g.money < g.nextWarehouse.cost) return { visible:true, enabled:false, reason:'창고 확장 비용이 부족해요.' };
+    if (kind === 'storage' && !g.nextWarehouse) return { visible: true, enabled: false, reason: '창고가 최고 단계예요.' };
+    return { visible: true, enabled: true, reason: '' };
+}
 const uncampaign = (s) => { const n = structuredClone(s); delete n.campaign; return n; };
 const pause = () => new Promise(r => setTimeout(r, 0));
 export function suggestAssignments(g, planOverride) { const workers = [...g.service.paid], p = planOverride ?? g.serviceSpace?.megaPlan, zones = p ? megaZones(p) : [], homes = p ? megaCrewHomes(p, g.staffLimit + 1) : [], out = {}; const logisticsCount = workers.length >= 2 && (p?.fixtures?.length ?? 0) > 0 ? Math.max(1, Math.floor(workers.length / 8)) : 0; const quotas = Array.from({ length: workers.length }, (_, i) => i < logisticsCount ? 'logistics' : workers.length >= 10 && i === logisticsCount ? 'kitchen' : workers.length >= 5 && i === logisticsCount + 1 ? 'vip' : workers.length >= 16 && i === logisticsCount + 2 ? 'zone-manager' : 'floor'); const pool = workers.filter(w => !crewAssignment(g, w.staffId).locked); for (const w of workers)

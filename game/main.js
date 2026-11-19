@@ -124,10 +124,10 @@ el('serve').onclick = () => { advanceTime(); if (game?.serveReadyOrder())
 const staffRecoveryButton = document.createElement('button');
 staffRecoveryButton.id = 'staff-position-recovery';
 staffRecoveryButton.type = 'button';
-staffRecoveryButton.textContent = '직원 위치 복구';
+staffRecoveryButton.textContent = '직원 원위치';
 staffRecoveryButton.className = 'staff-position-recovery';
 staffRecoveryButton.title = '겹쳐 멈춘 직원을 안전한 위치로 복귀시켜요. 주문과 보유금은 유지해요.';
-document.querySelector('.scene-actions').after(staffRecoveryButton);
+document.getElementById('session-menu').before(staffRecoveryButton);
 let staffRecoveryUntil = 0;
 staffRecoveryButton.onclick = () => { advanceTime(); if (!game || game.status !== 'RUNNING' || commonBusy || performance.now() < staffRecoveryUntil)
     return; scene?.sync(game); const avoid = scene ? game.guests.map(g => scene.guest(g)) : []; const result = game.service.recoverPositions(avoid); el('service-hint').hidden = false; el('service-hint').textContent = result.reason; hintUntil = performance.now() + 10000; if (result.ok) {

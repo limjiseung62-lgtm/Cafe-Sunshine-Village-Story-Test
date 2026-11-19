@@ -83,3 +83,10 @@
  body #playing .mode-status{grid-column:2;grid-row:3}
  body #playing .item-effects{grid-column:2;grid-row:2;align-self:end}
 }
+
+/* Always-available recovery beside the menu; original action and cooldown retained. */
+body .session-tools>#staff-position-recovery{width:auto;min-height:44px;padding:7px 10px;margin:0;flex:0 0 auto;font-size:12px;line-height:1.2;white-space:nowrap;border-radius:9px}
+body .session-tools>#motion-toggle{min-height:44px;white-space:nowrap}
+@media(max-width:500px){body .session-tools>.tools-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}body .session-tools>#motion-toggle{font-size:11px;padding:5px}}
+
+#app:not(.in-session) .session-tools>#staff-position-recovery,#app:has(#playing[hidden]) .session-tools>#staff-position-recovery{display:none}

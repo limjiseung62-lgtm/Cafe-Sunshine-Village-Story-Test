@@ -3,7 +3,7 @@ const moved=new Map();
 function sync(){if(!playing||!menu)return;const active=media.matches&&app.classList.contains('in-session')&&!playing.hidden;
  for(const[node,marker]of moved)if(!node.isConnected){marker.remove();moved.delete(node)}
  if(!active){for(const[node,marker]of moved){if(marker.isConnected)marker.replaceWith(node)}moved.clear();return}
- const ids=['staff-position-recovery','live-mega-management','manager-companion','renewal-reward-wallet','renewal-help','departure-talks','progressive-goals','long-tools'];
+ const ids=['live-mega-management','manager-companion','renewal-reward-wallet','renewal-help','departure-talks','progressive-goals','long-tools'];
  for(const id of ids){const node=document.getElementById(id);if(node&&!menu.contains(node)){const marker=document.createComment('mobile-control-'+id);node.before(marker);moved.set(node,marker);menu.append(node)}}
  const nav=document.querySelector('#playing .scene-actions');if(innerHeight<=500&&nav&&!menu.contains(nav)){const marker=document.createComment('mobile-scene-actions');nav.before(marker);moved.set(nav,marker);menu.append(nav)}else if(innerHeight>500&&nav&&moved.has(nav)){const marker=moved.get(nav);if(marker.isConnected)marker.replaceWith(nav);moved.delete(nav)}
 }
