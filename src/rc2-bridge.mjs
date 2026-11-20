@@ -9,3 +9,8 @@ let hint=null;addEventListener("message",e=>{if(e.origin!==location.origin||e.so
 
 // Explicit user navigation only: original controls retain eligibility, confirmation and persistence.
 addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.type!=='sunshine-native-ui/2')return;let el;if(e.data.target==='specialization'||e.data.target==='festival'){parent.postMessage({type:'sunshine-native-ui-note/3',target:e.data.target},location.origin);return;}if(e.data.target==='branch')el=document.querySelector('#branch-open');if(e.data.target==='manager')el=document.querySelector('#manager-companion')??[...document.querySelectorAll('.mega-expansion-entry')].find(b=>b.textContent.includes('매니저 선택'));if(el&&!el.disabled&&el.getClientRects().length)el.click();else parent.postMessage({type:'sunshine-native-ui-note/2',target:e.data.target},location.origin);});
+
+// New cafe starts only after parent acknowledges the persisted prologue.
+let startTicket=null,allowStart=false;
+document.addEventListener('click',e=>{const b=e.target?.closest?.('#new-growth');if(!b||allowStart)return;if(b.disabled)return;e.preventDefault();e.stopImmediatePropagation();if(startTicket)return;startTicket=crypto.randomUUID();parent.postMessage({type:'sunshine-prologue-request/1',id:startTicket},location.origin);},true);
+addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.type!=='sunshine-prologue-ack/1'||e.data.id!==startTicket)return;startTicket=null;if(e.data.ok!==true)return;const b=document.getElementById('new-growth');if(!b||b.disabled)return;allowStart=true;try{b.click()}finally{allowStart=false}});
