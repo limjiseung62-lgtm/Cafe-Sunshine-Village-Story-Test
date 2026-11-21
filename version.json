@@ -1,6 +1,6 @@
 {
-  "version": "sunshine-part1-qb3-test.4",
-  "build": "20261121-STORY-FLOW-1",
+  "version": "sunshine-part1-qb3-test.5",
+  "build": "20261121-VILLAGE-V2-1",
   "cafeVersion": "3.2.0-growth-only-rc.1",
   "cafeCommit": "c072d237c9e0e21c00fb0c36033bff9a87cee7dd",
   "storyCommit": "aaec997",
@@ -21,5 +21,6 @@
   "publicSVGPreparation": "on-demand-display-after-scoped-approval",
   "storyAutoFlow": true,
   "branchMobileCanvasFix": true,
-  "villageIllustrations": "AWAITING_USER_REVIEW_NOT_APPLIED"
+  "villageIllustrations": "APPLIED_ACTUAL_OWNERSHIP",
+  "visualRulesVersion": 1
 }

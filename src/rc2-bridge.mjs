@@ -14,3 +14,8 @@ addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent|
 let startTicket=null,allowStart=false;
 document.addEventListener('click',e=>{const b=e.target?.closest?.('#new-growth');if(!b||allowStart)return;if(b.disabled)return;e.preventDefault();e.stopImmediatePropagation();if(startTicket)return;startTicket=crypto.randomUUID();parent.postMessage({type:'sunshine-prologue-request/1',id:startTicket},location.origin);},true);
 addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==parent||e.data?.type!=='sunshine-prologue-ack/1'||e.data.id!==startTicket)return;startTicket=null;if(e.data.ok!==true)return;const b=document.getElementById('new-growth');if(!b||b.disabled)return;allowStart=true;try{b.click()}finally{allowStart=false}});
+
+const exteriorObserver=new MutationObserver(mountExterior);
+function mountExterior(){const tools=document.querySelector('.mega-toolbar');if(!tools)return;if(!tools.querySelector('[data-village-exterior]')){const b=document.createElement('button');b.type='button';b.dataset.villageExterior='';b.textContent='외관';b.style.minHeight='44px';b.onclick=()=>parent.postMessage({type:'sunshine-exterior-open/1'},location.origin);tools.append(b)}exteriorObserver.disconnect()}
+function watchExterior(){exteriorObserver.observe(document.getElementById('app')??document.body,{childList:true,subtree:true});mountExterior()}
+const playingForExterior=document.getElementById('playing');if(playingForExterior)new MutationObserver(()=>{if(!playingForExterior.hidden)watchExterior()}).observe(playingForExterior,{attributes:true,attributeFilter:['hidden']});watchExterior();

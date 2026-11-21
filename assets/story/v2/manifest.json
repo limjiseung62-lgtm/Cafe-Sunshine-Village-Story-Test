@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "sourceApproval": "SUNSHINE-DESSERT-ART-V2-20261121",
+  "entries": {
+    "village-base": {
+      "file": "village-base.webp",
+      "width": 1536,
+      "height": 1024,
+      "columns": 1,
+      "rows": 1,
+      "cellAspect": 1.5,
+      "alpha": false,
+      "source": "exec-f814b588-a96d-4e96-9b82-000094d2ff95.png",
+      "sha256": "13d7394d1ce6fffc263aadbb098fa1f6bd8a7ddf09fd03f86763156e340934a8"
+    },
+    "structure-atlas": {
+      "file": "structure-atlas.webp",
+      "width": 1774,
+      "height": 887,
+      "columns": 4,
+      "rows": 2,
+      "cellAspect": 1.0,
+      "alpha": true,
+      "source": "exec-d0ea503e-a512-4a94-8b89-56567cc929ca.png",
+      "sha256": "188cf8a667758805302d46f172ae18ddf3993e0eb2c45851a582c084bde97164"
+    },
+    "brand-front-atlas": {
+      "file": "brand-front-atlas.webp",
+      "width": 1312,
+      "height": 1199,
+      "columns": 2,
+      "rows": 2,
+      "cellAspect": 1.0942452043369475,
+      "alpha": true,
+      "source": "exec-b932a7b6-1a5e-4ed3-b377-2d17ba7f1268.png",
+      "sha256": "9ee1d7719c8d216619dd226efbc6103330ec4fb7a35e3b0062662c4f21e6113c"
+    },
+    "neighbors-atlas": {
+      "file": "neighbors-atlas.webp",
+      "width": 1536,
+      "height": 1024,
+      "columns": 3,
+      "rows": 2,
+      "cellAspect": 1.0,
+      "alpha": true,
+      "source": "exec-a545b46f-e7dd-44e4-81eb-7cc5bc3d256c.png",
+      "sha256": "6900b39d3cc9e86b2678bc73bee0b538f0cfc2e8953f50cf2c550c2c60606b21"
+    }
+  }
+}
