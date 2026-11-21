@@ -1,4 +1,4 @@
-import{renderVillage,openVillageExterior}from'./village-view.mjs';
+import{renderVillage,openVillageExterior}from'./first-page-view.mjs';
 import{gate6Variant}from'./gate6-scenes.mjs';
 import{gate5Variant}from'./gate5-scenes.mjs';
 import{renderFinale,renderTownFinale,clearFinale,finaleBusy,preloadFinale,photoPath}from'./finale-stage.mjs';
